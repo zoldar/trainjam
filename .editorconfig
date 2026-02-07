@@ -1,0 +1,7 @@
+[*.lua]
+
+trailing_table_separator = keep
+indent_style = space
+indent_size = 2
+tab_width = 2
+max_line_length = 100
