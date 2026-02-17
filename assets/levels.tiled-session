@@ -1,0 +1,39 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "level1.tmx": {
+            "scale": 2.4286,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 308.20225644404184,
+                "y": 222.96796508276373
+            }
+        }
+    },
+    "last.exportedFilePath": "/Users/zoldar/Work/personal/love/jams/trainjam/assets",
+    "last.imagePath": "/Users/zoldar/Work/personal/love/jams/trainjam/assets/caves-rails-tileset-1.2",
+    "lastUsedTilesetExportFilter": "Lua files (*.lua)",
+    "map.fixedSize": false,
+    "map.lastUsedExportFilter": "Lua files (*.lua)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+    ],
+    "project": "levels.tiled-project",
+    "property.type": "string",
+    "recentFiles": [
+        "level1.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
