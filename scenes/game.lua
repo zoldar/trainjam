@@ -45,6 +45,33 @@ ORIENTATION = {
   right = "horizontal",
 }
 
+ORTHOGONAL = {
+  up = DIRECTIONS.right,
+  down = DIRECTIONS.right,
+  left = DIRECTIONS.up,
+  right = DIRECTIONS.down,
+}
+
+local function getSwitchedFrom(directions)
+  -- directions.fixed
+  -- directions.switchL
+  -- directions.switchR
+
+  local switchL = next(directions.switchL) and directions.switchL or directions.fixed
+  local switchR = next(directions.switchR) and directions.switchR or directions.fixed
+
+  local output
+
+  for k in pairs(switchL) do
+    if switchL[k] and switchR[k] and switchL[k] ~= switchR[k] then
+      output = k
+      break
+    end
+  end
+
+  return output
+end
+
 local function loadLevel(level)
   local map = tiled.loadMap(require("assets." .. level))
   local ground = {}
@@ -52,12 +79,15 @@ local function loadLevel(level)
   local levers = {}
   local trains = {}
 
-  local leverSheet = map.sheets.tileset_objects.image
+  local objectSheet = map.sheets.tileset_objects.image
   local leverSprites = {}
+  local arrowSprites = {}
 
   for _, tile in ipairs(map.sheets.tileset_objects.tiles) do
     if tile.name == "lever" then
       leverSprites[tile.state] = tile.sprite
+    elseif tile.name == "arrow" then
+      arrowSprites[tile.direction] = tile.sprite
     end
   end
 
@@ -173,7 +203,12 @@ local function loadLevel(level)
         local tile = map.byId[map.layers.levers[x][y]]
 
         local draw = function()
-          lg.draw(leverSheet, leverSprites[levers[strPosition].state], x * TILE_SIZE, y * TILE_SIZE)
+          lg.draw(
+            objectSheet,
+            leverSprites[levers[strPosition].state],
+            x * TILE_SIZE,
+            y * TILE_SIZE
+          )
         end
 
         levers[strPosition] = { draw = draw, state = tile.state }
@@ -182,10 +217,6 @@ local function loadLevel(level)
       if map.layers.rails[x] and map.layers.rails[x][y] then
         local tile = map.byId[map.layers.rails[x][y]]
         local sheet = map.sheets[tile.sheetName].image
-        local draw = function()
-          lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
-        end
-
         local directions = {
           fixed = {},
           switchL = {},
@@ -203,9 +234,12 @@ local function loadLevel(level)
         end
 
         local switchDirections
+        local switchedFrom
+        local leverPosition
 
         if tile.switch then
-          local leverPosition = position + DIRECTIONS[tile.switch]
+          switchedFrom = getSwitchedFrom(directions)
+          leverPosition = position + DIRECTIONS[tile.switch]
           switchDirections = function()
             return directions[levers[tostring(leverPosition)].state]
           end
@@ -213,6 +247,22 @@ local function loadLevel(level)
           switchDirections = function()
             return {}
           end
+        end
+
+        local draw = function()
+          if tile.switch then
+            local arrowDirection = switchDirections()[switchedFrom]
+              or directions.fixed[switchedFrom]
+            local arrowPosition = leverPosition + ORTHOGONAL[tile.switch]
+
+            lg.draw(
+              objectSheet,
+              arrowSprites[arrowDirection],
+              arrowPosition.x * TILE_SIZE,
+              arrowPosition.y * TILE_SIZE
+            )
+          end
+          lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
         end
 
         rails[strPosition] =

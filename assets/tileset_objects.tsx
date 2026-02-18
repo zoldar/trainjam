@@ -16,4 +16,28 @@
    <property name="state" value="switchR"/>
   </properties>
  </tile>
+ <tile id="30">
+  <properties>
+   <property name="direction" value="left"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="31">
+  <properties>
+   <property name="direction" value="right"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="40">
+  <properties>
+   <property name="direction" value="up"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="41">
+  <properties>
+   <property name="direction" value="down"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
 </tileset>

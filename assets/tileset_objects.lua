@@ -41,6 +41,34 @@ return {
         ["name"] = "lever",
         ["state"] = "switchR"
       }
+    },
+    {
+      id = 30,
+      properties = {
+        ["direction"] = "left",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 31,
+      properties = {
+        ["direction"] = "right",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 40,
+      properties = {
+        ["direction"] = "up",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 41,
+      properties = {
+        ["direction"] = "down",
+        ["name"] = "arrow"
+      }
     }
   }
 }
