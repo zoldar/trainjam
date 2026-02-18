@@ -60,14 +60,14 @@ return {
       id = 4,
       properties = {
         ["orientation"] = "horizontal",
-        ["type"] = "train_front"
+        ["type"] = "train1_front"
       }
     },
     {
       id = 5,
       properties = {
         ["orientation"] = "vertical",
-        ["type"] = "train_front"
+        ["type"] = "train1_front"
       }
     }
   }

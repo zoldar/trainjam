@@ -31,156 +31,163 @@ return {
     {
       id = 0,
       properties = {
-        ["type"] = "end_up"
+        ["fixed"] = "D"
       }
     },
     {
       id = 6,
       properties = {
-        ["turns"] = "LR,RD",
-        ["type"] = "turn"
+        ["fixed"] = "LR",
+        ["switch"] = "up",
+        ["switchR"] = "RD"
       }
     },
     {
       id = 7,
       properties = {
-        ["turns"] = "LR,LD",
-        ["type"] = "turn"
+        ["fixed"] = "LR",
+        ["switch"] = "up",
+        ["switchL"] = "LD"
       }
     },
     {
       id = 8,
       properties = {
-        ["turns"] = "RD",
-        ["type"] = "turn"
+        ["fixed"] = "RD"
       }
     },
     {
       id = 9,
       properties = {
-        ["turns"] = "LD",
-        ["type"] = "turn"
+        ["fixed"] = "LD"
       }
     },
     {
       id = 10,
       properties = {
-        ["type"] = "end_down"
+        ["fixed"] = "U"
       }
     },
     {
       id = 12,
       properties = {
-        ["type"] = "straight_v"
+        ["fixed"] = "UD"
       }
     },
     {
       id = 16,
       properties = {
-        ["turns"] = "LR,RU",
-        ["type"] = "turn"
+        ["fixed"] = "LR",
+        ["switch"] = "down",
+        ["switchR"] = "RU"
       }
     },
     {
       id = 17,
       properties = {
-        ["turns"] = "LR,LU",
-        ["type"] = "turn"
+        ["fixed"] = "LR",
+        ["switch"] = "down",
+        ["switchL"] = "LU"
       }
     },
     {
       id = 18,
       properties = {
-        ["turns"] = "RU",
-        ["type"] = "turn"
+        ["fixed"] = "RU"
       }
     },
     {
       id = 19,
       properties = {
-        ["turns"] = "LU",
-        ["type"] = "turn"
+        ["fixed"] = "LU"
       }
     },
     {
       id = 26,
       properties = {
-        ["turns"] = "UD,RD",
-        ["type"] = "turn"
+        ["fixed"] = "UD",
+        ["switch"] = "left",
+        ["switchR"] = "RD"
       }
     },
     {
       id = 27,
       properties = {
-        ["turns"] = "UD,LD",
-        ["type"] = "turn"
+        ["fixed"] = "UD",
+        ["switch"] = "right",
+        ["switchL"] = "LD"
       }
     },
     {
       id = 28,
       properties = {
-        ["turns"] = "RD,LD",
-        ["type"] = "switch"
+        ["switch"] = "up",
+        ["switchL"] = "LD",
+        ["switchR"] = "RD"
       }
     },
     {
       id = 29,
       properties = {
-        ["turns"] = "LU,LD",
-        ["type"] = "turn"
+        ["switch"] = "right",
+        ["switchL"] = "LU",
+        ["switchR"] = "LD"
       }
     },
     {
       id = 36,
       properties = {
-        ["turns"] = "UD,RU",
-        ["type"] = "turn"
+        ["fixed"] = "UD",
+        ["switch"] = "left",
+        ["switchR"] = "RU"
       }
     },
     {
       id = 37,
       properties = {
-        ["turns"] = "UD,LU",
-        ["type"] = "turn"
+        ["fixed"] = "UD",
+        ["switch"] = "right",
+        ["switchL"] = "LU"
       }
     },
     {
       id = 38,
       properties = {
-        ["turns"] = "RU,RD",
-        ["type"] = "switch"
+        ["switch"] = "left",
+        ["switchL"] = "RD",
+        ["switchR"] = "RU"
       }
     },
     {
       id = 39,
       properties = {
-        ["turns"] = "RU,LU",
-        ["type"] = "switch"
+        ["switch"] = "down",
+        ["switchL"] = "LU",
+        ["switchR"] = "RU"
       }
     },
     {
       id = 40,
       properties = {
-        ["type"] = "end_left"
+        ["fixed"] = "R"
       }
     },
     {
       id = 44,
       properties = {
-        ["type"] = "straight_h"
+        ["fixed"] = "LR"
       }
     },
     {
       id = 45,
       properties = {
-        ["type"] = "end_right"
+        ["fixed"] = "L"
       }
     },
     {
       id = 80,
       properties = {
-        ["turns"] = "UD,LR",
-        ["type"] = "turn"
+        ["fixed"] = "LR,UD"
       }
     }
   }

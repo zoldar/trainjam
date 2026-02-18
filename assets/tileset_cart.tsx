@@ -25,7 +25,7 @@
  <tile id="3">
   <properties>
    <property name="orientation" value="vertical"/>
-   <property name="type" value="train1_back"/>
+   <property name="type" value="train_back"/>
   </properties>
  </tile>
  <tile id="4">

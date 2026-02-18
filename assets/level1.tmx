@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="7" nextobjectid="1">
+ <editorsettings>
+  <export target="level1.lua" format="lua"/>
+ </editorsettings>
  <tileset firstgid="1" source="tileset_terrains.tsx"/>
  <tileset firstgid="57" source="tileset_rails.tsx"/>
  <tileset firstgid="157" source="tileset_cart.tsx"/>
@@ -8,7 +11,7 @@
   <data encoding="csv">
    <chunk x="0" y="0" width="16" height="16">
 49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,49,
-49,49,49,49,49,49,5,6,6,6,7,49,9,2,2,2,
+49,1,2,3,49,49,5,6,6,6,7,49,9,2,2,2,
 49,9,10,10,11,49,49,49,49,49,49,49,20,49,49,49,
 49,17,18,18,19,49,9,2,2,2,2,2,26,2,2,2,
 49,17,18,18,19,49,20,49,49,49,49,49,49,49,49,49,

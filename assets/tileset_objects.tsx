@@ -6,11 +6,13 @@
  <image source="caves-rails-tileset-1.2/tileset_objects.png" width="160" height="80"/>
  <tile id="0">
   <properties>
+   <property name="name" value="lever"/>
    <property name="state" value="switchL"/>
   </properties>
  </tile>
  <tile id="1">
   <properties>
+   <property name="name" value="lever"/>
    <property name="state" value="switchR"/>
   </properties>
  </tile>

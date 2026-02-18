@@ -31,15 +31,15 @@ return {
     {
       id = 0,
       properties = {
-        ["state"] = "leftdown",
-        ["type"] = "lever"
+        ["name"] = "lever",
+        ["state"] = "switchL"
       }
     },
     {
       id = 1,
       properties = {
-        ["state"] = "rightup",
-        ["type"] = "lever"
+        ["name"] = "lever",
+        ["state"] = "switchR"
       }
     }
   }

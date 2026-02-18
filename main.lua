@@ -18,14 +18,15 @@ BINDINGS = {
 }
 
 DIRECTIONS = {
-  left = v.new(-1, 0),
-  right = v.new(1, 0),
-  up = v.new(0, -1),
-  down = v.new(0, 1),
+  left = v(-1, 0),
+  right = v(1, 0),
+  up = v(0, -1),
+  down = v(0, 1),
 }
 
 INSPECT = function(x)
   print(inspect(x))
+  return x
 end
 
 BUS = Bus:new()
@@ -34,7 +35,7 @@ function love.load()
   screen.load(GAME_WIDTH, GAME_HEIGHT)
   keys.configure(BINDINGS)
   assets.load()
-  scenes.init("scenes/", "intro")
+  scenes.init("scenes/", "game")
 end
 
 function love.keypressed(key)

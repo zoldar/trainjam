@@ -60,4 +60,4 @@ function Vector.__tostring(v)
   return "(" .. v.x .. ", " .. v.y .. ")"
 end
 
-return Vector
+return Vector.new

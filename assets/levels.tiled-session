@@ -3,17 +3,34 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "level1.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
         "level1.tmx": {
             "scale": 2.4286,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 308.20225644404184,
-                "y": 222.96796508276373
+                "x": 38.293667133327844,
+                "y": 183.85077822613852
             }
+        },
+        "tileset_cart.tsx": {
+            "scaleInDock": 2.347,
+            "scaleInEditor": 5.5
+        },
+        "tileset_objects.tsx": {
+            "scaleInDock": 3.0728,
+            "scaleInEditor": 5.5
+        },
+        "tileset_rails.tsx": {
+            "scaleInDock": 3.2013,
+            "scaleInEditor": 5.5
+        },
+        "tileset_terrains.tsx": {
+            "scaleInDock": 3.2601,
+            "scaleInEditor": 5.5
         }
     },
     "last.exportedFilePath": "/Users/zoldar/Work/personal/love/jams/trainjam/assets",
@@ -25,10 +42,19 @@
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
+        "tileset_terrains.tsx",
+        "tileset_rails.tsx",
+        "tileset_cart.tsx",
+        "tileset_objects.tsx",
+        "level1.tmx"
     ],
     "project": "levels.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "tileset_terrains.tsx",
+        "tileset_rails.tsx",
+        "tileset_cart.tsx",
+        "tileset_objects.tsx",
         "level1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",

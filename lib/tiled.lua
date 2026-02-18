@@ -128,6 +128,101 @@ local function loadPointsOfInterest(map, layer)
   return map
 end
 
+local function loadSheet(data)
+  local sheet = {}
+
+  sheet.name = data.name
+  sheet.tileWidth = data.tilewidth
+  sheet.tileHeight = data.tileheight
+  sheet.image = love.graphics.newImage("assets/" .. data.image)
+  sheet.tiles = {}
+
+  local columns = data.columns
+
+  local tilesMeta = {}
+
+  for _, meta in ipairs(data.tiles) do
+    tilesMeta[meta.id] = meta.properties or {}
+  end
+
+  for idx = 1, data.tilecount do
+    local id = idx - 1
+    local column = id % columns
+    local row = math.floor(id / columns)
+    local sprite = love.graphics.newQuad(
+      column * sheet.tileWidth,
+      row * sheet.tileHeight,
+      sheet.tileWidth,
+      sheet.tileHeight,
+      sheet.image
+    )
+
+    local entry = {
+      id = id,
+      sprite = sprite,
+      sheetName = sheet.name,
+    }
+
+    if tilesMeta[id] then
+      for k, v in pairs(tilesMeta[id]) do
+        entry[k] = v
+      end
+    end
+
+    sheet.tiles[idx] = entry
+  end
+
+  return sheet
+end
+
+local function gridFromChunks(chunks)
+  local grid = {}
+
+  for _, chunk in ipairs(chunks) do
+    for idx, n in ipairs(chunk.data) do
+      if n > 0 then
+        local x = ((idx - 1) % chunk.width) + chunk.x
+        local y = math.floor((idx - 1) / chunk.width) + chunk.y
+
+        grid[x] = grid[x] or {}
+        grid[x][y] = n
+      end
+    end
+  end
+
+  return grid
+end
+
+function _M.loadMap(data)
+  local sheets = {}
+  local globalSheet = {}
+  local layers = {}
+
+  for _, tileset in ipairs(data.tilesets) do
+    local sheet = loadSheet(require("assets." .. tileset.name))
+    local idOffset = tileset.firstgid
+
+    sheets[sheet.name] = sheet
+
+    for _, tile in ipairs(sheet.tiles) do
+      globalSheet[idOffset + tile.id] = tile
+    end
+  end
+
+  for _, layer in ipairs(data.layers) do
+    local name = layer.name
+    local grid = gridFromChunks(layer.chunks)
+
+    layers[name] = grid
+  end
+
+  return {
+    sheets = sheets,
+    byId = globalSheet,
+    layers = layers,
+  }
+end
+
 function _M.load(path)
   local data = require(path)
 
