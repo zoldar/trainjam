@@ -13,7 +13,7 @@ TILE_SIZE = 16
 GRID_WIDTH = GAME_WIDTH / TILE_SIZE
 GRID_HEIGHT = GAME_HEIGHT / TILE_SIZE
 
-TRAIN_SPEED = 30
+TRAIN_SPEED = 40
 
 RAIL_DIRECTIONS = {
   U = { down = "up" },
@@ -133,7 +133,9 @@ local function loadLevel(level)
       local tile = map.byId[spriteId]
 
       if tile.type == "train_front" then
-        trains[#trains + 1] = {
+        local idx = #trains + 1
+        trains[idx] = {
+          id = idx,
           position = v(x, y),
           realPosition = v(x, y) * TILE_SIZE,
           direction = "up",
@@ -148,11 +150,12 @@ local function loadLevel(level)
     end
   end
 
-  local buildTail = function(position, dir)
+  local buildTail = function(train, position, dir)
     local tail = {}
 
     while wagons[tostring(position)] do
       tail[#tail + 1] = {
+        trainId = train.id,
         position = position,
         realPosition = position * TILE_SIZE,
         direction = INVERSE[tostring(dir)],
@@ -180,7 +183,7 @@ local function loadLevel(level)
       if nextWagon then
         train.orientation = nil
         train.direction = INVERSE[tostring(dir)]
-        train.tail = buildTail(position, dir)
+        train.tail = buildTail(train, position, dir)
         break
       end
     end
@@ -291,6 +294,11 @@ local function turnWagon(wagon)
     if exit and wagon.direction ~= exit then
       wagon.direction = exit
       wagon.realPosition = wagon.position * TILE_SIZE
+    elseif not exit then
+      local train = wagon.trainId and game.trains[wagon.trainId] or wagon
+
+      train.speed = 0
+      train.destroyed = true
     end
   end
 end
@@ -333,6 +341,74 @@ local function moveTrain(train, dt)
   end
 end
 
+local function eachTrainWagon(train, func)
+  func(train)
+  for _, wagon in ipairs(train.tail) do
+    func(wagon)
+  end
+end
+
+local function eachWagon(func)
+  for _, train in ipairs(game.trains) do
+    eachTrainWagon(train, func)
+  end
+end
+
+-- AABB
+local function collides(x1, y1, w1, h1, x2, y2, w2, h2)
+  return x1 < x2 + w2 and x1 + w1 > x2 and y1 < y2 + h2 and y1 + h1 > y2
+end
+
+local function checkCollisions(train)
+  eachTrainWagon(train, function(wagon)
+    if not train.destroyed then
+      eachWagon(function(otherWagon)
+        local wagonId = wagon.id or wagon.trainId
+        local otherWagonId = otherWagon.id or otherWagon.trainId
+
+        if wagonId ~= otherWagonId then
+          local w, h = TILE_SIZE, TILE_SIZE
+          local x1, y1 = wagon.realPosition.x, wagon.realPosition.y
+          local x2, y2 = otherWagon.realPosition.x, otherWagon.realPosition.y
+
+          if collides(x1, y1, w, h, x2, y2, w, h) then
+            train.speed = 0
+            train.destroyed = true
+          end
+        end
+      end)
+    end
+  end)
+end
+
+local function trainDestroyed()
+  for _, train in ipairs(game.trains) do
+    if train.destroyed then
+      return true
+    end
+  end
+
+  return false
+end
+
+local function isOutOfMap(train)
+  local allOut = true
+
+  local x1, y1 = 0, 0
+  local w1, h1 = GAME_WIDTH, GAME_HEIGHT
+
+  eachTrainWagon(train, function(wagon)
+    local x2, y2 = wagon.realPosition.x, wagon.realPosition.y
+    local w2, h2 = TILE_SIZE, TILE_SIZE
+
+    if collides(x1, y1, w1, h1, x2, y2, w2, h2) then
+      allOut = false
+    end
+  end)
+
+  return allOut
+end
+
 local function switchLever(x, y)
   x, y = math.floor(x / TILE_SIZE), math.floor(y / TILE_SIZE)
 
@@ -357,11 +433,33 @@ function game:init()
   game.debugListener = BUS:subscribe("keypressed_debug", function()
     game.debug = not game.debug
   end)
+
+  game.started = false
 end
 
 function game:update(dt)
-  for _, train in ipairs(game.trains) do
+  if not game.started then
+    game.started = true
+    scenes.push("countdown")
+  end
+
+  for idx = #game.trains, 1, -1 do
+    local train = game.trains[idx]
+
     moveTrain(train, dt)
+    checkCollisions(train)
+    if isOutOfMap(train) then
+      INSPECT("REMOVING TRAIN")
+      table.remove(game.trains, idx)
+    end
+  end
+
+  if trainDestroyed() then
+    scenes.push("lost")
+  end
+
+  if #game.trains == 0 then
+    scenes.push("won")
   end
 end
 
