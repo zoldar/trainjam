@@ -37,7 +37,7 @@ return {
     {
       id = 6,
       properties = {
-        ["fixed"] = "LR",
+        ["fixed"] = "RD,LR",
         ["switch"] = "up",
         ["switchR"] = "RD"
       }
@@ -45,7 +45,7 @@ return {
     {
       id = 7,
       properties = {
-        ["fixed"] = "LR",
+        ["fixed"] = "LD,LR",
         ["switch"] = "up",
         ["switchL"] = "LD"
       }
@@ -77,7 +77,7 @@ return {
     {
       id = 16,
       properties = {
-        ["fixed"] = "LR",
+        ["fixed"] = "RU,LR",
         ["switch"] = "down",
         ["switchR"] = "RU"
       }
@@ -85,7 +85,7 @@ return {
     {
       id = 17,
       properties = {
-        ["fixed"] = "LR",
+        ["fixed"] = "LU,LR",
         ["switch"] = "down",
         ["switchL"] = "LU"
       }
@@ -105,7 +105,7 @@ return {
     {
       id = 26,
       properties = {
-        ["fixed"] = "UD",
+        ["fixed"] = "RD,UD",
         ["switch"] = "left",
         ["switchR"] = "RD"
       }
@@ -113,7 +113,7 @@ return {
     {
       id = 27,
       properties = {
-        ["fixed"] = "UD",
+        ["fixed"] = "LD,UD",
         ["switch"] = "right",
         ["switchL"] = "LD"
       }
@@ -122,22 +122,22 @@ return {
       id = 28,
       properties = {
         ["switch"] = "up",
-        ["switchL"] = "LD",
-        ["switchR"] = "RD"
+        ["switchL"] = "RD,LD",
+        ["switchR"] = "LD,RD"
       }
     },
     {
       id = 29,
       properties = {
         ["switch"] = "right",
-        ["switchL"] = "LU",
-        ["switchR"] = "LD"
+        ["switchL"] = "LD,LU",
+        ["switchR"] = "LU,LD"
       }
     },
     {
       id = 36,
       properties = {
-        ["fixed"] = "UD",
+        ["fixed"] = "RU,UD",
         ["switch"] = "left",
         ["switchR"] = "RU"
       }
@@ -145,7 +145,7 @@ return {
     {
       id = 37,
       properties = {
-        ["fixed"] = "UD",
+        ["fixed"] = "LU,UD",
         ["switch"] = "right",
         ["switchL"] = "LU"
       }
@@ -154,16 +154,16 @@ return {
       id = 38,
       properties = {
         ["switch"] = "left",
-        ["switchL"] = "RD",
-        ["switchR"] = "RU"
+        ["switchL"] = "RU,RD",
+        ["switchR"] = "RD,RU"
       }
     },
     {
       id = 39,
       properties = {
         ["switch"] = "down",
-        ["switchL"] = "LU",
-        ["switchR"] = "RU"
+        ["switchL"] = "RU,LU",
+        ["switchR"] = "LU,RU"
       }
     },
     {

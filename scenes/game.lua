@@ -236,23 +236,41 @@ local function turnWagon(wagon)
 
     local exit = rail.switchDirections()[comingFrom] or rail.directions[comingFrom]
 
-    if exit then
+    if exit and wagon.direction ~= exit then
       wagon.direction = exit
       wagon.realPosition = wagon.position * TILE_SIZE
     end
   end
 end
 
+local function roundByDirection(position, direction)
+  local x, y = position.x, position.y
+
+  if direction == "left" then
+    x, y = math.ceil(x), math.floor(y)
+  elseif direction == "right" then
+    x, y = math.floor(x), math.floor(y)
+  elseif direction == "up" then
+    x, y = math.floor(x), math.ceil(y)
+  else
+    x, y = math.floor(x), math.floor(y)
+  end
+
+  return v(x, y)
+end
+
 local function moveWagon(wagon, speed, dt)
   wagon.realPosition = wagon.realPosition + DIRECTIONS[wagon.direction] * speed * dt
   local position = wagon.realPosition / TILE_SIZE
-  position = v(math.floor(position.x), math.floor(position.y))
+
+  position = roundByDirection(position, wagon.direction)
 
   if position.x ~= wagon.position.x or position.y ~= wagon.position.y then
+    wagon.position = position
     turnWagon(wagon)
+  else
+    wagon.position = position
   end
-
-  wagon.position = v(math.floor(position.x), math.floor(position.y))
 end
 
 local function moveTrain(train, dt)
@@ -268,6 +286,8 @@ function game:init()
   game.world = slick.newWorld(GAME_WIDTH, GAME_HEIGHT)
 
   loadLevel("level1")
+  -- local rail = game.rails[tostring(v(6, 9))]
+  -- INSPECT({rail.directions, rail.switchDirections()})
 
   game.debugListener = BUS:subscribe("keypressed_debug", function()
     game.debug = not game.debug

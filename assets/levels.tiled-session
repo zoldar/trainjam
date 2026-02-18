@@ -10,10 +10,10 @@
     "fileStates": {
         "level1.tmx": {
             "scale": 2,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 184.5,
-                "y": 175.75
+                "x": 180.5,
+                "y": 171.75
             }
         },
         "tileset_cart.tsx": {

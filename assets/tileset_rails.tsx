@@ -11,14 +11,14 @@
  </tile>
  <tile id="6">
   <properties>
-   <property name="fixed" value="LR"/>
+   <property name="fixed" value="RD,LR"/>
    <property name="switch" value="up"/>
    <property name="switchR" value="RD"/>
   </properties>
  </tile>
  <tile id="7">
   <properties>
-   <property name="fixed" value="LR"/>
+   <property name="fixed" value="LD,LR"/>
    <property name="switch" value="up"/>
    <property name="switchL" value="LD"/>
   </properties>
@@ -45,14 +45,14 @@
  </tile>
  <tile id="16">
   <properties>
-   <property name="fixed" value="LR"/>
+   <property name="fixed" value="RU,LR"/>
    <property name="switch" value="down"/>
    <property name="switchR" value="RU"/>
   </properties>
  </tile>
  <tile id="17">
   <properties>
-   <property name="fixed" value="LR"/>
+   <property name="fixed" value="LU,LR"/>
    <property name="switch" value="down"/>
    <property name="switchL" value="LU"/>
   </properties>
@@ -69,14 +69,14 @@
  </tile>
  <tile id="26">
   <properties>
-   <property name="fixed" value="UD"/>
+   <property name="fixed" value="RD,UD"/>
    <property name="switch" value="left"/>
    <property name="switchR" value="RD"/>
   </properties>
  </tile>
  <tile id="27">
   <properties>
-   <property name="fixed" value="UD"/>
+   <property name="fixed" value="LD,UD"/>
    <property name="switch" value="right"/>
    <property name="switchL" value="LD"/>
   </properties>
@@ -84,27 +84,27 @@
  <tile id="28">
   <properties>
    <property name="switch" value="up"/>
-   <property name="switchL" value="LD"/>
-   <property name="switchR" value="RD"/>
+   <property name="switchL" value="RD,LD"/>
+   <property name="switchR" value="LD,RD"/>
   </properties>
  </tile>
  <tile id="29">
   <properties>
    <property name="switch" value="right"/>
-   <property name="switchL" value="LU"/>
-   <property name="switchR" value="LD"/>
+   <property name="switchL" value="LD,LU"/>
+   <property name="switchR" value="LU,LD"/>
   </properties>
  </tile>
  <tile id="36">
   <properties>
-   <property name="fixed" value="UD"/>
+   <property name="fixed" value="RU,UD"/>
    <property name="switch" value="left"/>
    <property name="switchR" value="RU"/>
   </properties>
  </tile>
  <tile id="37">
   <properties>
-   <property name="fixed" value="UD"/>
+   <property name="fixed" value="LU,UD"/>
    <property name="switch" value="right"/>
    <property name="switchL" value="LU"/>
   </properties>
@@ -112,15 +112,15 @@
  <tile id="38">
   <properties>
    <property name="switch" value="left"/>
-   <property name="switchL" value="RD"/>
-   <property name="switchR" value="RU"/>
+   <property name="switchL" value="RU,RD"/>
+   <property name="switchR" value="RD,RU"/>
   </properties>
  </tile>
  <tile id="39">
   <properties>
    <property name="switch" value="down"/>
-   <property name="switchL" value="LU"/>
-   <property name="switchR" value="RU"/>
+   <property name="switchL" value="RU,LU"/>
+   <property name="switchR" value="LU,RU"/>
   </properties>
  </tile>
  <tile id="40">
