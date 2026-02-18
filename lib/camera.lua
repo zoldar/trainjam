@@ -43,4 +43,8 @@ function camera:detach()
   self.hump:detach()
 end
 
+function camera:worldCoords(x, y)
+  return self.hump:worldCoords(x, y)
+end
+
 return camera

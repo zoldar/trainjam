@@ -105,7 +105,7 @@ local function loadLevel(level)
           position = v(x, y),
           realPosition = v(x, y) * TILE_SIZE,
           direction = "up",
-          speed = 20,
+          speed = 40,
           tail = {},
           orientation = tile.orientation,
           draw = drawTrain(#trains + 1),
@@ -281,13 +281,26 @@ local function moveTrain(train, dt)
   end
 end
 
+local function switchLever(x, y)
+  x, y = math.floor(x / TILE_SIZE), math.floor(y / TILE_SIZE)
+
+  local lever = game.levers[tostring(v(x, y))]
+
+  if lever then
+    lever.state = lever.state == "switchL" and "switchR" or "switchL"
+  end
+end
+
 function game:init()
   game.camera = camera:new()
   game.world = slick.newWorld(GAME_WIDTH, GAME_HEIGHT)
 
   loadLevel("level1")
-  -- local rail = game.rails[tostring(v(6, 9))]
-  -- INSPECT({rail.directions, rail.switchDirections()})
+
+  game.mouseListener = BUS:subscribe("mouseclicked_primary", function(position)
+    local x, y = game.camera:worldCoords(position.x, position.y)
+    switchLever(x, y)
+  end)
 
   game.debugListener = BUS:subscribe("keypressed_debug", function()
     game.debug = not game.debug
@@ -330,6 +343,7 @@ end
 
 function game:close()
   BUS:unsubscribe(game.debugListener)
+  BUS:unsubscribe(game.mouseListener)
 end
 
 return game

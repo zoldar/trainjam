@@ -52,6 +52,11 @@ function love.keyreleased(key)
   end
 end
 
+function love.mousereleased(x, y, button)
+  local buttonName = button == 1 and "primary" or "secondary"
+  BUS:publish("mouseclicked_" .. buttonName, { x = x, y = y })
+end
+
 function love.resize(w, h)
   screen.resize(w, h)
 end
