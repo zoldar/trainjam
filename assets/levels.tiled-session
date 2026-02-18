@@ -3,17 +3,17 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level1.tmx",
+    "activeFile": "tileset_rails.tsx",
     "expandedProjectPaths": [
         "."
     ],
     "fileStates": {
         "level1.tmx": {
-            "scale": 2.4286,
-            "selectedLayer": 3,
+            "scale": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 38.293667133327844,
-                "y": 183.85077822613852
+                "x": 184.5,
+                "y": 175.75
             }
         },
         "tileset_cart.tsx": {
@@ -26,7 +26,7 @@
         },
         "tileset_rails.tsx": {
             "scaleInDock": 3.2013,
-            "scaleInEditor": 5.5
+            "scaleInEditor": 4
         },
         "tileset_terrains.tsx": {
             "scaleInDock": 3.2601,
@@ -52,10 +52,10 @@
     "property.type": "string",
     "recentFiles": [
         "tileset_terrains.tsx",
-        "tileset_rails.tsx",
-        "tileset_cart.tsx",
+        "level1.tmx",
         "tileset_objects.tsx",
-        "level1.tmx"
+        "tileset_cart.tsx",
+        "tileset_rails.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

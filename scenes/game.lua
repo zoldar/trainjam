@@ -9,22 +9,6 @@ local lg = love.graphics
 
 local game = { debug = false }
 
--- local function turn(wagon, rails)
---   local rail = rails[train.position]
---
---   local inverse = { up = "down", down = "up", left = "right", right = "left" }
---   local comingFrom = inverse[wagon.direction]
---
---   rails.directions = { { up = "left", left = "up" } }
---   rails.directions = { { left = "right", right = "left" }, { down = "left", left = "down" } }
---   rails.directions = { { up = "down", down = "up" } }
---
---   local goingTo = inverse[rails.directions[comingFrom]]
---
---   wagon.direction = goingTo
--- end
---
-
 TILE_SIZE = 16
 GRID_WIDTH = GAME_WIDTH / TILE_SIZE
 GRID_HEIGHT = GAME_HEIGHT / TILE_SIZE
@@ -94,8 +78,8 @@ local function loadLevel(level)
       lg.draw(
         trainSheet,
         trainSprites["train_front_" .. orientation],
-        train.position.x * TILE_SIZE,
-        train.position.y * TILE_SIZE
+        train.realPosition.x,
+        train.realPosition.y
       )
 
       for _, t in ipairs(train.tail) do
@@ -103,8 +87,8 @@ local function loadLevel(level)
         lg.draw(
           trainSheet,
           trainSprites["train_back_" .. tailOrientation],
-          t.position.x * TILE_SIZE,
-          t.position.y * TILE_SIZE
+          t.realPosition.x,
+          t.realPosition.y
         )
       end
     end
@@ -119,8 +103,9 @@ local function loadLevel(level)
       if tile.type == "train_front" then
         trains[#trains + 1] = {
           position = v(x, y),
+          realPosition = v(x, y) * TILE_SIZE,
           direction = "up",
-          speed = 0,
+          speed = 20,
           tail = {},
           orientation = tile.orientation,
           draw = drawTrain(#trains + 1),
@@ -137,6 +122,7 @@ local function loadLevel(level)
     while wagons[tostring(position)] do
       tail[#tail + 1] = {
         position = position,
+        realPosition = position * TILE_SIZE,
         direction = INVERSE[tostring(dir)],
       }
 
@@ -242,6 +228,41 @@ local function loadLevel(level)
   game.trains = trains
 end
 
+local function turnWagon(wagon)
+  local rail = game.rails[tostring(wagon.position)]
+
+  if rail then
+    local comingFrom = INVERSE[wagon.direction]
+
+    local exit = rail.switchDirections()[comingFrom] or rail.directions[comingFrom]
+
+    if exit then
+      wagon.direction = exit
+      wagon.realPosition = wagon.position * TILE_SIZE
+    end
+  end
+end
+
+local function moveWagon(wagon, speed, dt)
+  wagon.realPosition = wagon.realPosition + DIRECTIONS[wagon.direction] * speed * dt
+  local position = wagon.realPosition / TILE_SIZE
+  position = v(math.floor(position.x), math.floor(position.y))
+
+  if position.x ~= wagon.position.x or position.y ~= wagon.position.y then
+    turnWagon(wagon)
+  end
+
+  wagon.position = v(math.floor(position.x), math.floor(position.y))
+end
+
+local function moveTrain(train, dt)
+  moveWagon(train, train.speed, dt)
+
+  for _, wagon in ipairs(train.tail) do
+    moveWagon(wagon, train.speed, dt)
+  end
+end
+
 function game:init()
   game.camera = camera:new()
   game.world = slick.newWorld(GAME_WIDTH, GAME_HEIGHT)
@@ -253,7 +274,11 @@ function game:init()
   end)
 end
 
-function game:update(dt) end
+function game:update(dt)
+  for _, train in ipairs(game.trains) do
+    moveTrain(train, dt)
+  end
+end
 
 function game:draw()
   game.camera:attach()
