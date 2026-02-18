@@ -6,7 +6,7 @@ local won = {}
 
 function won:init()
   BUS:subscribeOnce("keypressed_use", function()
-    scenes.switch("game")
+    scenes.switch("game", "level2")
   end)
 
   self.camera = camera:new()

@@ -419,11 +419,11 @@ local function switchLever(x, y)
   end
 end
 
-function game:init()
+function game:init(level)
   game.camera = camera:new()
   game.world = slick.newWorld(GAME_WIDTH, GAME_HEIGHT)
 
-  loadLevel("level1")
+  loadLevel(level or "level1")
 
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function(position)
     local x, y = game.camera:worldCoords(position.x, position.y)
