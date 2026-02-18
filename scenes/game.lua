@@ -13,6 +13,8 @@ TILE_SIZE = 16
 GRID_WIDTH = GAME_WIDTH / TILE_SIZE
 GRID_HEIGHT = GAME_HEIGHT / TILE_SIZE
 
+TRAIN_SPEED = 30
+
 RAIL_DIRECTIONS = {
   U = { down = "up" },
   D = { up = "down" },
@@ -135,7 +137,7 @@ local function loadLevel(level)
           position = v(x, y),
           realPosition = v(x, y) * TILE_SIZE,
           direction = "up",
-          speed = 40,
+          speed = TRAIN_SPEED,
           tail = {},
           orientation = tile.orientation,
           draw = drawTrain(#trains + 1),
