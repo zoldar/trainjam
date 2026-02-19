@@ -76,10 +76,12 @@ end
 
 local function loadLevel(level)
   local map = tiled.loadMap(require("assets." .. level))
+  local playerPosition = v(map.props.playerTrainX, map.props.playerTrainY)
   local ground = {}
   local rails = {}
   local levers = {}
   local trains = {}
+  local playerTrain
 
   local objectSheet = map.sheets.tileset_objects.image
   local leverSprites = {}
@@ -130,22 +132,27 @@ local function loadLevel(level)
 
   for x, row in pairs(map.layers.trains) do
     for y, spriteId in pairs(row) do
+      local position = v(x, y)
       local tile = map.byId[spriteId]
 
       if tile.type == "train_front" then
         local idx = #trains + 1
         trains[idx] = {
           id = idx,
-          position = v(x, y),
-          realPosition = v(x, y) * TILE_SIZE,
+          position = position,
+          realPosition = position * TILE_SIZE,
           direction = "up",
           speed = TRAIN_SPEED,
           tail = {},
           orientation = tile.orientation,
           draw = drawTrain(#trains + 1),
         }
+
+        if position == playerPosition then
+          playerTrain = trains[idx]
+        end
       else
-        wagons[tostring(v(x, y))] = map.byId[spriteId].orientation
+        wagons[tostring(position)] = map.byId[spriteId].orientation
       end
     end
   end
@@ -281,6 +288,7 @@ local function loadLevel(level)
   game.rails = rails
   game.levers = levers
   game.trains = trains
+  game.playerTrain = playerTrain
 end
 
 local function turnWagon(wagon)
@@ -423,7 +431,7 @@ function game:init(level)
   game.camera = camera:new()
   game.world = slick.newWorld(GAME_WIDTH, GAME_HEIGHT)
 
-  loadLevel(level or "level1")
+  loadLevel(level or "level2")
 
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function(position)
     local x, y = game.camera:worldCoords(position.x, position.y)
@@ -449,7 +457,6 @@ function game:update(dt)
     moveTrain(train, dt)
     checkCollisions(train)
     if isOutOfMap(train) then
-      INSPECT("REMOVING TRAIN")
       table.remove(game.trains, idx)
     end
   end

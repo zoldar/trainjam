@@ -197,6 +197,11 @@ function _M.loadMap(data)
   local sheets = {}
   local globalSheet = {}
   local layers = {}
+  local props = {}
+
+  for k, v in pairs(data.properties) do
+    props[k] = v
+  end
 
   for _, tileset in ipairs(data.tilesets) do
     local sheet = loadSheet(require("assets." .. tileset.name))
@@ -220,6 +225,7 @@ function _M.loadMap(data)
     sheets = sheets,
     byId = globalSheet,
     layers = layers,
+    props = props,
   }
 end
 
