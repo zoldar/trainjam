@@ -36,12 +36,15 @@ function _M.load(game, level)
   local objectSheet = map.sheets.tileset_objects.image
   local leverSprites = {}
   local arrowSprites = {}
+  local markerSprites = {}
 
   for _, tile in ipairs(map.sheets.tileset_objects.tiles) do
     if tile.name == "lever" then
       leverSprites[tile.state] = tile.sprite
     elseif tile.name == "arrow" then
       arrowSprites[tile.direction] = tile.sprite
+    elseif tile.name == "marker" then
+      markerSprites[tile.color] = tile.sprite
     end
   end
 
@@ -244,6 +247,7 @@ function _M.load(game, level)
   game.levers = levers
   game.trains = trains
   game.playerTrain = playerTrain
+  game.markerSprites = markerSprites
 
   return game
 end

@@ -28,6 +28,12 @@
    <property name="name" value="arrow"/>
   </properties>
  </tile>
+ <tile id="32">
+  <properties>
+   <property name="color" value="yellow"/>
+   <property name="name" value="marker"/>
+  </properties>
+ </tile>
  <tile id="40">
   <properties>
    <property name="direction" value="up"/>
@@ -38,6 +44,12 @@
   <properties>
    <property name="direction" value="down"/>
    <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="42">
+  <properties>
+   <property name="color" value="yellow"/>
+   <property name="name" value="marker"/>
   </properties>
  </tile>
 </tileset>
