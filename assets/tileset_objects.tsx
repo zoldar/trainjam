@@ -48,7 +48,7 @@
  </tile>
  <tile id="42">
   <properties>
-   <property name="color" value="yellow"/>
+   <property name="color" value="white"/>
    <property name="name" value="marker"/>
   </properties>
  </tile>

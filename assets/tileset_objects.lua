@@ -57,6 +57,13 @@ return {
       }
     },
     {
+      id = 32,
+      properties = {
+        ["color"] = "yellow",
+        ["name"] = "marker"
+      }
+    },
+    {
       id = 40,
       properties = {
         ["direction"] = "up",
@@ -68,6 +75,13 @@ return {
       properties = {
         ["direction"] = "down",
         ["name"] = "arrow"
+      }
+    },
+    {
+      id = 42,
+      properties = {
+        ["color"] = "white",
+        ["name"] = "marker"
       }
     }
   }

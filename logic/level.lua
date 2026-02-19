@@ -95,7 +95,7 @@ function _M.load(game, level)
           position = position,
           realPosition = position * TILE_SIZE,
           direction = "up",
-          speed = TRAIN_SPEED,
+          speed = map.props.otherTrainsSpeed * TRAIN_SPEED,
           tail = {},
           orientation = tile.orientation,
           draw = drawTrain(#trains + 1),
@@ -103,6 +103,7 @@ function _M.load(game, level)
 
         if position == playerPosition then
           playerTrain = trains[idx]
+          playerTrain.speed = TRAIN_SPEED
         end
       else
         wagons[tostring(position)] = map.byId[spriteId].orientation

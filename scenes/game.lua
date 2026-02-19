@@ -182,6 +182,36 @@ local function switchLever(x, y, tilePosition)
   end
 end
 
+local function drawMarkers()
+  local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
+
+  lg.setColor(1, 1, 1, 0.6)
+
+  lg.draw(
+    game.map.sheets.tileset_objects.image,
+    game.markerSprites.white,
+    playerMarker.x,
+    playerMarker.y
+  )
+
+  local showTurnMarker = game.playerTrain.nextTurn
+    and game.rails[tostring(game.playerTrain.nextTurn)]
+    and game.rails[tostring(game.playerTrain.nextTurn)].switchable
+
+  if showTurnMarker then
+    local turnMarker = game.playerTrain.nextTurn * TILE_SIZE
+
+    lg.draw(
+      game.map.sheets.tileset_objects.image,
+      game.markerSprites.yellow,
+      turnMarker.x,
+      turnMarker.y
+    )
+  end
+
+  lg.setColor(1, 1, 1, 1)
+end
+
 function game:init(levelName)
   game.camera = camera:new()
   game.world = slick.newWorld(GAME_WIDTH, GAME_HEIGHT)
@@ -250,6 +280,8 @@ function game:draw()
   for _, t in ipairs(game.trains) do
     t.draw()
   end
+
+  drawMarkers()
 
   lg.print("WIP")
 
