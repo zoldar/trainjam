@@ -232,6 +232,7 @@ function _M.load(game, level)
           directions = directions.fixed,
           switchDirections = switchDirections,
           switchable = tile.switch,
+          leverPosition = leverPosition,
         }
       end
     end

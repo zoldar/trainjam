@@ -11,8 +11,8 @@ local lg = love.graphics
 local game = { debug = false }
 
 local function probeRail(position, direction)
-  position = position + DIRECTIONS[direction]
-  local rail = game.rails[tostring(position)]
+  local newPosition = position + DIRECTIONS[direction]
+  local rail = game.rails[tostring(newPosition)]
 
   if rail then
     local comingFrom = INVERSE[direction]
@@ -20,7 +20,7 @@ local function probeRail(position, direction)
     local exit = rail.switchDirections()[comingFrom] or rail.directions[comingFrom]
 
     if exit then
-      return position, exit, true
+      return newPosition, exit, true
     else
       return position, direction, false
     end
@@ -31,6 +31,11 @@ end
 
 local function probe(startPosition, startDirection, fullPath)
   local position, direction = startPosition, startDirection
+  local canContinue = true
+
+  if not game.rails[tostring(position)] then
+    return position, false
+  end
 
   while fullPath or not game.rails[tostring(position)].switchable do
     position, direction, canContinue = probeRail(position, direction)
@@ -88,7 +93,7 @@ local function moveWagon(wagon, speed, dt)
   if position.x ~= wagon.position.x or position.y ~= wagon.position.y then
     wagon.position = position
     turnWagon(wagon)
-    wagon.nextTurn = probe(wagon.position, wagon.direction, true)
+    wagon.nextTurn = probe(wagon.position, wagon.direction)
   else
     wagon.position = position
   end
@@ -165,8 +170,10 @@ local function isOutOfMap(train)
   return allOut
 end
 
-local function switchLever(x, y)
-  x, y = math.floor(x / TILE_SIZE), math.floor(y / TILE_SIZE)
+local function switchLever(x, y, tilePosition)
+  if not tilePosition then
+    x, y = math.floor(x / TILE_SIZE), math.floor(y / TILE_SIZE)
+  end
 
   local lever = game.levers[tostring(v(x, y))]
 
@@ -184,6 +191,13 @@ function game:init(levelName)
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function(position)
     local x, y = game.camera:worldCoords(position.x, position.y)
     switchLever(x, y)
+  end)
+
+  game.actionListener = BUS:subscribe("keypressed_use", function()
+    local nextSwitch = game.rails[tostring(game.playerTrain.nextTurn)]
+    if nextSwitch and nextSwitch.switchable then
+      switchLever(nextSwitch.leverPosition.x, nextSwitch.leverPosition.y, true)
+    end
   end)
 
   game.debugListener = BUS:subscribe("keypressed_debug", function()
@@ -249,6 +263,7 @@ end
 function game:close()
   BUS:unsubscribe(game.debugListener)
   BUS:unsubscribe(game.mouseListener)
+  BUS:unsubscribe(game.actionListener)
 end
 
 return game
