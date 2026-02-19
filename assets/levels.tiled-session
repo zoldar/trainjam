@@ -60,9 +60,9 @@
     "project": "levels.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "tileset_cart.tsx",
         "tileset_terrains.tsx",
         "tileset_rails.tsx",
-        "tileset_cart.tsx",
         "level2.tmx",
         "level1.tmx",
         "tileset_objects.tsx"

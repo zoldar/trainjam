@@ -55,7 +55,9 @@ function _M.load(game, level)
   local trainSprites = {}
 
   for _, tile in ipairs(map.sheets.tileset_cart.tiles) do
-    if tile.type then
+    if tile.state then
+      trainSprites[tile.type .. "_" .. tile.orientation .. "_" .. tile.state] = tile.sprite
+    else
       trainSprites[tile.type .. "_" .. tile.orientation] = tile.sprite
     end
   end
@@ -76,7 +78,7 @@ function _M.load(game, level)
         local tailOrientation = ORIENTATION[t.direction]
         lg.draw(
           trainSheet,
-          trainSprites["train_back_" .. tailOrientation],
+          trainSprites["train_back_" .. tailOrientation .. "_" .. t.state],
           t.realPosition.x,
           t.realPosition.y
         )
@@ -119,6 +121,7 @@ function _M.load(game, level)
 
     while wagons[tostring(position)] do
       tail[#tail + 1] = {
+        state = "empty",
         trainId = train.id,
         position = position,
         realPosition = position * TILE_SIZE,

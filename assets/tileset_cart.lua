@@ -32,6 +32,7 @@ return {
       id = 0,
       properties = {
         ["orientation"] = "horizontal",
+        ["state"] = "empty",
         ["type"] = "train_back"
       }
     },
@@ -53,6 +54,7 @@ return {
       id = 3,
       properties = {
         ["orientation"] = "vertical",
+        ["state"] = "empty",
         ["type"] = "train_back"
       }
     },
@@ -60,14 +62,16 @@ return {
       id = 4,
       properties = {
         ["orientation"] = "horizontal",
-        ["type"] = "train1_front"
+        ["state"] = "full",
+        ["type"] = "train_back"
       }
     },
     {
       id = 5,
       properties = {
         ["orientation"] = "vertical",
-        ["type"] = "train1_front"
+        ["state"] = "full",
+        ["type"] = "train_back"
       }
     }
   }

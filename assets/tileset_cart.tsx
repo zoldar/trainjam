@@ -7,6 +7,7 @@
  <tile id="0">
   <properties>
    <property name="orientation" value="horizontal"/>
+   <property name="state" value="empty"/>
    <property name="type" value="train_back"/>
   </properties>
  </tile>
@@ -25,19 +26,22 @@
  <tile id="3">
   <properties>
    <property name="orientation" value="vertical"/>
+   <property name="state" value="empty"/>
    <property name="type" value="train_back"/>
   </properties>
  </tile>
  <tile id="4">
   <properties>
    <property name="orientation" value="horizontal"/>
-   <property name="type" value="train1_front"/>
+   <property name="state" value="full"/>
+   <property name="type" value="train_back"/>
   </properties>
  </tile>
  <tile id="5">
   <properties>
    <property name="orientation" value="vertical"/>
-   <property name="type" value="train1_front"/>
+   <property name="state" value="full"/>
+   <property name="type" value="train_back"/>
   </properties>
  </tile>
 </tileset>
