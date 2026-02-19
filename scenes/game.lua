@@ -173,6 +173,13 @@ local function switchLever(x, y, tilePosition)
   end
 end
 
+local function switchNextLever(train)
+  local nextSwitch = game.rails[tostring(train.nextTurn)]
+  if nextSwitch and nextSwitch.switchable then
+    switchLever(nextSwitch.leverPosition.x, nextSwitch.leverPosition.y, true)
+  end
+end
+
 local function drawMarkers()
   local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
 
@@ -209,16 +216,12 @@ function game:init(levelName)
 
   game = level.load(game, levelName or "level2")
 
-  game.mouseListener = BUS:subscribe("mouseclicked_primary", function(position)
-    local x, y = game.camera:worldCoords(position.x, position.y)
-    switchLever(x, y)
+  game.mouseListener = BUS:subscribe("mouseclicked_primary", function()
+    switchNextLever(game.playerTrain)
   end)
 
   game.actionListener = BUS:subscribe("keypressed_use", function()
-    local nextSwitch = game.rails[tostring(game.playerTrain.nextTurn)]
-    if nextSwitch and nextSwitch.switchable then
-      switchLever(nextSwitch.leverPosition.x, nextSwitch.leverPosition.y, true)
-    end
+    switchNextLever(game.playerTrain)
   end)
 
   game.debugListener = BUS:subscribe("keypressed_debug", function()
