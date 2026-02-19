@@ -1,28 +1,11 @@
 local screen = require("lib.screen")
 local assets = require("assets")
-local v = require("lib.vector")
 local Bus = require("lib.bus")
 local scenes = require("lib.scenes")
 local keys = require("lib.keys")
 local inspect = require("vendor.inspect")
 
-GAME_WIDTH, GAME_HEIGHT = 320, 240
-
-BINDINGS = {
-  use = { "space" },
-  left = { "left", "a" },
-  right = { "right", "d" },
-  up = { "up", "w" },
-  down = { "s" },
-  debug = { "d" },
-}
-
-DIRECTIONS = {
-  left = v(-1, 0),
-  right = v(1, 0),
-  up = v(0, -1),
-  down = v(0, 1),
-}
+require("logic.globals")
 
 INSPECT = function(x)
   print(inspect(x))
