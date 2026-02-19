@@ -128,9 +128,10 @@ local function checkCollisions(train)
         local otherWagonId = otherWagon.id or otherWagon.trainId
 
         if wagonId ~= otherWagonId then
-          local w, h = TILE_SIZE, TILE_SIZE
-          local x1, y1 = wagon.realPosition.x, wagon.realPosition.y
-          local x2, y2 = otherWagon.realPosition.x, otherWagon.realPosition.y
+          local w, h = TILE_SIZE - 2 * HITBOX_SHRINK, TILE_SIZE - 2 * HITBOX_SHRINK
+          local x1, y1 = wagon.realPosition.x + HITBOX_SHRINK, wagon.realPosition.y + HITBOX_SHRINK
+          local x2, y2 =
+            otherWagon.realPosition.x + HITBOX_SHRINK, otherWagon.realPosition.y + HITBOX_SHRINK
 
           if collisions.aabb(x1, y1, w, h, x2, y2, w, h) then
             train.speed = 0
@@ -140,16 +141,6 @@ local function checkCollisions(train)
       end)
     end
   end)
-end
-
-local function trainDestroyed()
-  for _, train in ipairs(game.trains) do
-    if train.destroyed then
-      return true
-    end
-  end
-
-  return false
 end
 
 local function isOutOfMap(train)
@@ -248,16 +239,13 @@ function game:update(dt)
 
     moveTrain(train, dt)
     checkCollisions(train)
-    if isOutOfMap(train) then
-      table.remove(game.trains, idx)
-    end
   end
 
-  if trainDestroyed() then
+  if game.playerTrain.destroyed then
     scenes.push("lost")
   end
 
-  if #game.trains == 0 then
+  if isOutOfMap(game.playerTrain) then
     scenes.push("won")
   end
 end

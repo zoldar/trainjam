@@ -63,3 +63,4 @@ ORTHOGONAL = {
   right = DIRECTIONS.down,
 }
 
+HITBOX_SHRINK = 3

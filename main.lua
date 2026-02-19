@@ -5,7 +5,7 @@ local scenes = require("lib.scenes")
 local keys = require("lib.keys")
 local inspect = require("vendor.inspect")
 
-require("logic.globals")
+require("logic.constants")
 
 INSPECT = function(x)
   print(inspect(x))
