@@ -10,6 +10,39 @@ local lg = love.graphics
 
 local game = { debug = false }
 
+local function probeRail(position, direction)
+  position = position + DIRECTIONS[direction]
+  local rail = game.rails[tostring(position)]
+
+  if rail then
+    local comingFrom = INVERSE[direction]
+
+    local exit = rail.switchDirections()[comingFrom] or rail.directions[comingFrom]
+
+    if exit then
+      return position, exit, true
+    else
+      return position, direction, false
+    end
+  else
+    return position, direction, false
+  end
+end
+
+local function probe(startPosition, startDirection, fullPath)
+  local position, direction = startPosition, startDirection
+
+  while fullPath or not game.rails[tostring(position)].switchable do
+    position, direction, canContinue = probeRail(position, direction)
+
+    if not canContinue then
+      return position, false
+    end
+  end
+
+  return position, true
+end
+
 local function turnWagon(wagon)
   local rail = game.rails[tostring(wagon.position)]
 
@@ -55,6 +88,7 @@ local function moveWagon(wagon, speed, dt)
   if position.x ~= wagon.position.x or position.y ~= wagon.position.y then
     wagon.position = position
     turnWagon(wagon)
+    wagon.nextTurn = probe(wagon.position, wagon.direction, true)
   else
     wagon.position = position
   end

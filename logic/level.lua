@@ -227,8 +227,12 @@ function _M.load(game, level)
           lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
         end
 
-        rails[strPosition] =
-          { draw = draw, directions = directions.fixed, switchDirections = switchDirections }
+        rails[strPosition] = {
+          draw = draw,
+          directions = directions.fixed,
+          switchDirections = switchDirections,
+          switchable = tile.switch,
+        }
       end
     end
   end
