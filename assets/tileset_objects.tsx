@@ -16,15 +16,51 @@
    <property name="state" value="switchR"/>
   </properties>
  </tile>
+ <tile id="16">
+  <properties>
+   <property name="direction" value="LU"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="17">
+  <properties>
+   <property name="direction" value="RU"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="18">
+  <properties>
+   <property name="direction" value="UD"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="26">
+  <properties>
+   <property name="direction" value="LD"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="27">
+  <properties>
+   <property name="direction" value="RD"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="28">
+  <properties>
+   <property name="direction" value="LR"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
  <tile id="30">
   <properties>
-   <property name="direction" value="left"/>
+   <property name="direction" value="L"/>
    <property name="name" value="arrow"/>
   </properties>
  </tile>
  <tile id="31">
   <properties>
-   <property name="direction" value="right"/>
+   <property name="direction" value="R"/>
    <property name="name" value="arrow"/>
   </properties>
  </tile>
@@ -36,13 +72,13 @@
  </tile>
  <tile id="40">
   <properties>
-   <property name="direction" value="up"/>
+   <property name="direction" value="U"/>
    <property name="name" value="arrow"/>
   </properties>
  </tile>
  <tile id="41">
   <properties>
-   <property name="direction" value="down"/>
+   <property name="direction" value="D"/>
    <property name="name" value="arrow"/>
   </properties>
  </tile>

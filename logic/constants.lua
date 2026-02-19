@@ -37,6 +37,29 @@ RAIL_DIRECTIONS = {
   LD = { left = "down", down = "left" },
 }
 
+INVERSE_RAIL_2WAY = {
+  up = {
+    down = "UD",
+    left = "LU",
+    right = "RU",
+  },
+  down = {
+    up = "UD",
+    left = "LD",
+    right = "RD",
+  },
+  left = {
+    right = "LR",
+    up = "LU",
+    down = "LD",
+  },
+  right = {
+    left = "LR",
+    up = "RU",
+    down = "RD",
+  },
+}
+
 INVERSE = {
   up = "down",
   down = "up",

@@ -43,16 +43,58 @@ return {
       }
     },
     {
+      id = 16,
+      properties = {
+        ["direction"] = "LU",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 17,
+      properties = {
+        ["direction"] = "RU",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 18,
+      properties = {
+        ["direction"] = "UD",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 26,
+      properties = {
+        ["direction"] = "LD",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 27,
+      properties = {
+        ["direction"] = "RD",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 28,
+      properties = {
+        ["direction"] = "LR",
+        ["name"] = "arrow"
+      }
+    },
+    {
       id = 30,
       properties = {
-        ["direction"] = "left",
+        ["direction"] = "L",
         ["name"] = "arrow"
       }
     },
     {
       id = 31,
       properties = {
-        ["direction"] = "right",
+        ["direction"] = "R",
         ["name"] = "arrow"
       }
     },
@@ -66,14 +108,14 @@ return {
     {
       id = 40,
       properties = {
-        ["direction"] = "up",
+        ["direction"] = "U",
         ["name"] = "arrow"
       }
     },
     {
       id = 41,
       properties = {
-        ["direction"] = "down",
+        ["direction"] = "D",
         ["name"] = "arrow"
       }
     },

@@ -20,8 +20,8 @@
             "scale": 2.8002,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 255.8745803871152,
-                "y": 127.84801085636741
+                "x": 152.13199057210198,
+                "y": 140.1685593886151
             }
         },
         "tileset_cart.tsx": {
@@ -58,7 +58,7 @@
         "level2.tmx"
     ],
     "project": "levels.tiled-project",
-    "property.type": "float",
+    "property.type": "string",
     "recentFiles": [
         "tileset_terrains.tsx",
         "tileset_rails.tsx",

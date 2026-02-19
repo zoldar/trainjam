@@ -4,7 +4,7 @@ local lg = love.graphics
 
 local _M = {}
 
-local function getSwitchedFrom(directions)
+local function getSwitchedFromTo(directions, switch)
   -- directions.fixed
   -- directions.switchL
   -- directions.switchR
@@ -12,16 +12,19 @@ local function getSwitchedFrom(directions)
   local switchL = next(directions.switchL) and directions.switchL or directions.fixed
   local switchR = next(directions.switchR) and directions.switchR or directions.fixed
 
-  local output
+  local switchedFrom
 
   for k in pairs(switchL) do
     if switchL[k] and switchR[k] and switchL[k] ~= switchR[k] then
-      output = k
+      switchedFrom = k
       break
     end
   end
 
-  return output
+  local activeSwitch = switch == "switchR" and switchR or switchL
+  local switchedTo = activeSwitch[switchedFrom]
+
+  return INVERSE_RAIL_2WAY[switchedFrom][switchedTo]
 end
 
 function _M.load(game, level)
@@ -200,35 +203,48 @@ function _M.load(game, level)
         end
 
         local switchDirections
-        local switchedFrom
         local leverPosition
+        local leverState
 
         if tile.switch then
-          switchedFrom = getSwitchedFrom(directions)
           leverPosition = position + DIRECTIONS[tile.switch]
           switchDirections = function()
             return directions[levers[tostring(leverPosition)].state]
+          end
+          leverState = function()
+            return levers[tostring(leverPosition)].state
           end
         else
           switchDirections = function()
             return {}
           end
+          leverState = function()
+            return nil
+          end
         end
 
         local draw = function()
-          if tile.switch then
-            local arrowDirection = switchDirections()[switchedFrom]
-              or directions.fixed[switchedFrom]
-            local arrowPosition = leverPosition + ORTHOGONAL[tile.switch]
+          local lever = leverState()
+          local rx, ry = x * TILE_SIZE, y * TILE_SIZE
+
+          lg.draw(sheet, tile.sprite, rx, ry)
+
+          if lever then
+            local isNext = game.playerTrain.nextTurn and game.playerTrain.nextTurn == v(x, y)
+
+            if not isNext then
+              lg.setColor(1, 1, 1, 0.5)
+            end
 
             lg.draw(
-              objectSheet,
-              arrowSprites[arrowDirection],
-              arrowPosition.x * TILE_SIZE,
-              arrowPosition.y * TILE_SIZE
+              map.sheets.tileset_objects.image,
+              arrowSprites[getSwitchedFromTo(directions, lever)],
+              rx,
+              ry
             )
+
+            lg.setColor(1, 1, 1, 1)
           end
-          lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
         end
 
         rails[strPosition] = {

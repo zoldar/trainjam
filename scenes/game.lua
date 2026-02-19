@@ -192,21 +192,6 @@ local function drawMarkers()
     playerMarker.y
   )
 
-  local showTurnMarker = game.playerTrain.nextTurn
-    and game.rails[tostring(game.playerTrain.nextTurn)]
-    and game.rails[tostring(game.playerTrain.nextTurn)].switchable
-
-  if showTurnMarker then
-    local turnMarker = game.playerTrain.nextTurn * TILE_SIZE
-
-    lg.draw(
-      game.map.sheets.tileset_objects.image,
-      game.markerSprites.yellow,
-      turnMarker.x,
-      turnMarker.y
-    )
-  end
-
   lg.setColor(1, 1, 1, 1)
 end
 
