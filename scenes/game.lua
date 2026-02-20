@@ -276,7 +276,7 @@ function game:update(dt)
   end
 
   if isOutOfMap(game.playerTrain) then
-    if wagonsFull then
+    if game.wagonsFull then
       scenes.push("won")
     else
       scenes.push("lost")
