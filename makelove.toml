@@ -1,0 +1,8 @@
+name = "Train Jam"
+default_targets = ["win64", "macos", "lovejs"]
+build_directory = "makelove-build"
+
+love_files = [
+    "::git-ls-tree::",
+    "-*/.*",
+]

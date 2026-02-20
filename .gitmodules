@@ -1,3 +1,0 @@
-[submodule "vendor/slick"]
-	path = vendor/slick
-	url = https://github.com/erinmaus/slick.git
