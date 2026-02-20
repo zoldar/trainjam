@@ -55,13 +55,13 @@
  <tile id="30">
   <properties>
    <property name="direction" value="L"/>
-   <property name="name" value="arrow"/>
+   <property name="name" value="big_arrow"/>
   </properties>
  </tile>
  <tile id="31">
   <properties>
    <property name="direction" value="R"/>
-   <property name="name" value="arrow"/>
+   <property name="name" value="big_arrow"/>
   </properties>
  </tile>
  <tile id="32">
@@ -70,22 +70,46 @@
    <property name="name" value="marker"/>
   </properties>
  </tile>
- <tile id="40">
+ <tile id="36">
+  <properties>
+   <property name="direction" value="D"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="37">
   <properties>
    <property name="direction" value="U"/>
    <property name="name" value="arrow"/>
   </properties>
  </tile>
+ <tile id="40">
+  <properties>
+   <property name="direction" value="U"/>
+   <property name="name" value="big_arrow"/>
+  </properties>
+ </tile>
  <tile id="41">
   <properties>
    <property name="direction" value="D"/>
-   <property name="name" value="arrow"/>
+   <property name="name" value="big_arrow"/>
   </properties>
  </tile>
  <tile id="42">
   <properties>
    <property name="color" value="white"/>
    <property name="name" value="marker"/>
+  </properties>
+ </tile>
+ <tile id="46">
+  <properties>
+   <property name="direction" value="L"/>
+   <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="47">
+  <properties>
+   <property name="direction" value="R"/>
+   <property name="name" value="arrow"/>
   </properties>
  </tile>
 </tileset>

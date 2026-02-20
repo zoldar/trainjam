@@ -88,14 +88,14 @@ return {
       id = 30,
       properties = {
         ["direction"] = "L",
-        ["name"] = "arrow"
+        ["name"] = "big_arrow"
       }
     },
     {
       id = 31,
       properties = {
         ["direction"] = "R",
-        ["name"] = "arrow"
+        ["name"] = "big_arrow"
       }
     },
     {
@@ -106,17 +106,31 @@ return {
       }
     },
     {
-      id = 40,
+      id = 36,
+      properties = {
+        ["direction"] = "D",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 37,
       properties = {
         ["direction"] = "U",
         ["name"] = "arrow"
       }
     },
     {
+      id = 40,
+      properties = {
+        ["direction"] = "U",
+        ["name"] = "big_arrow"
+      }
+    },
+    {
       id = 41,
       properties = {
         ["direction"] = "D",
-        ["name"] = "arrow"
+        ["name"] = "big_arrow"
       }
     },
     {
@@ -124,6 +138,20 @@ return {
       properties = {
         ["color"] = "white",
         ["name"] = "marker"
+      }
+    },
+    {
+      id = 46,
+      properties = {
+        ["direction"] = "L",
+        ["name"] = "arrow"
+      }
+    },
+    {
+      id = 47,
+      properties = {
+        ["direction"] = "R",
+        ["name"] = "arrow"
       }
     }
   }
