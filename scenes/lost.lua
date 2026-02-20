@@ -9,6 +9,10 @@ function lost:init()
     scenes.switch("game")
   end)
 
+  BUS:subscribeOnce("mouseclicked_primary", function()
+    scenes.switch("game", "level2")
+  end)
+
   self.camera = camera:new()
 end
 

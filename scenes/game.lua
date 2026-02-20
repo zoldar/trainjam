@@ -4,11 +4,10 @@ local v = require("lib.vector")
 local camera = require("lib.camera")
 local scenes = require("lib.scenes")
 local collisions = require("lib.collisions")
-local slick = require("vendor.slick.slick")
 local level = require("logic.level")
 local lg = love.graphics
 
-local game = { debug = false }
+local game = { }
 
 local function probeRail(position, direction)
   local newPosition = position + DIRECTIONS[direction]
@@ -239,7 +238,6 @@ end
 
 function game:init(levelName)
   game.camera = camera:new()
-  game.world = slick.newWorld(GAME_WIDTH, GAME_HEIGHT)
 
   game = level.load(game, levelName or "level2")
 
@@ -249,10 +247,6 @@ function game:init(levelName)
 
   game.actionListener = BUS:subscribe("keypressed_use", function()
     switchNextLever(game.playerTrain)
-  end)
-
-  game.debugListener = BUS:subscribe("keypressed_debug", function()
-    game.debug = not game.debug
   end)
 
   game.started = false
@@ -323,15 +317,10 @@ function game:draw()
 
   lg.print("WIP")
 
-  if game.debug then
-    slick.drawWorld(game.world)
-  end
-
   game.camera:detach()
 end
 
 function game:close()
-  BUS:unsubscribe(game.debugListener)
   BUS:unsubscribe(game.mouseListener)
   BUS:unsubscribe(game.actionListener)
 end

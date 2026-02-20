@@ -22,9 +22,7 @@ function love.load()
 end
 
 function love.keypressed(key)
-  if key == "escape" or key == "q" then
-    love.event.quit()
-  elseif keys.toAction(key) then
+  if keys.toAction(key) then
     BUS:publish("keypressed_" .. keys.toAction(key))
   end
 end

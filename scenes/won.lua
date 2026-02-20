@@ -9,6 +9,10 @@ function won:init()
     scenes.switch("game", "level2")
   end)
 
+  BUS:subscribeOnce("mouseclicked_primary", function()
+    scenes.switch("game", "level2")
+  end)
+
   self.camera = camera:new()
 end
 

@@ -6,6 +6,10 @@ local camera = require("lib.camera")
 local intro = {}
 
 function intro:init()
+  BUS:subscribeOnce("mouseclicked_primary", function()
+    scenes.switch("game")
+  end)
+
   BUS:subscribeOnce("keypressed_use", function()
     scenes.switch("game")
   end)
