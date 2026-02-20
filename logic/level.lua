@@ -41,6 +41,7 @@ function _M.load(game, level)
     playerPosition = v(map.props.playerTrainX, map.props.playerTrainY)
   end
   local ground = {}
+  local objects = {}
   local rails = {}
   local levers = {}
   local trains = {}
@@ -196,6 +197,16 @@ function _M.load(game, level)
         ground[strPosition] = { draw = draw }
       end
 
+      if map.layers.objects[x] and map.layers.objects[x][y] then
+        local tile = map.byId[map.layers.objects[x][y]]
+        local sheet = map.sheets[tile.sheetName].image
+        local draw = function()
+          lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
+        end
+
+        objects[strPosition] = { draw = draw }
+      end
+
       if map.layers.levers[x] and map.layers.levers[x][y] then
         local tile = map.byId[map.layers.levers[x][y]]
 
@@ -349,6 +360,7 @@ function _M.load(game, level)
   game.levelName = level
   game.map = map
   game.ground = ground
+  game.objects = objects
   game.rails = rails
   game.levers = levers
   game.trains = trains

@@ -357,6 +357,10 @@ function game:draw()
     g.draw()
   end
 
+  for _, o in pairs(game.objects) do
+    o.draw()
+  end
+
   for _, r in pairs(game.rails) do
     r.draw()
   end

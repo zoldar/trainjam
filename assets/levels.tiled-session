@@ -8,9 +8,17 @@
         "."
     ],
     "fileStates": {
+        "level0.tmx": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 141,
+                "y": 141.5
+            }
+        },
         "level1.tmx": {
             "scale": 2,
-            "selectedLayer": 5,
+            "selectedLayer": 6,
             "viewCenter": {
                 "x": 177.5,
                 "y": 142.5
@@ -18,7 +26,7 @@
         },
         "level2.tmx": {
             "scale": 1.5,
-            "selectedLayer": 3,
+            "selectedLayer": 1,
             "viewCenter": {
                 "x": 227.33333333333334,
                 "y": 178
