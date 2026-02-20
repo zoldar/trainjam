@@ -69,20 +69,27 @@ function _M.load(game, level)
       local train = trains[trainIdx]
       local orientation = ORIENTATION[train.direction]
 
+      local markerOffset = 0
+      if game.started and train.speed > 0 and math.sin(game.timer * 10) > 0 then
+        markerOffset = -1
+      end
+
       lg.draw(
         trainSheet,
         trainSprites["train_front_" .. orientation],
         train.realPosition.x,
-        train.realPosition.y
+        train.realPosition.y + markerOffset
       )
 
       for _, t in ipairs(train.tail) do
+        markerOffset = markerOffset == -1 and 0 or -1
+
         local tailOrientation = ORIENTATION[t.direction]
         lg.draw(
           trainSheet,
           trainSprites["train_back_" .. tailOrientation .. "_" .. t.state],
           t.realPosition.x,
-          t.realPosition.y
+          t.realPosition.y + markerOffset
         )
       end
     end
@@ -192,13 +199,17 @@ function _M.load(game, level)
         local tile = map.byId[map.layers.pickups[x][y]]
         local sheet = map.sheets[tile.sheetName].image
         local draw = function()
+          local markerOffset = 0
+          if game.started and math.sin(game.timer * 10) > 0 then
+            markerOffset = -1
+          end
           if not game.pickups[strPosition].collected then
             local px, py = x * TILE_SIZE, y * TILE_SIZE
             lg.draw(
               map.sheets.tileset_objects.image,
               markerSprites.yellow,
               px,
-              py - TILE_SIZE * 0.75
+              py - TILE_SIZE * 0.75 + markerOffset
             )
             lg.draw(sheet, tile.sprite, px, py)
           end
@@ -211,7 +222,19 @@ function _M.load(game, level)
         local tile = map.byId[map.layers.exit_markers[x][y]]
         local sheet = map.sheets[tile.sheetName].image
         local draw = function()
-          lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
+          local markerOffset = 0
+          local mx, my = x * TILE_SIZE, y * TILE_SIZE
+          if game.started and math.sin(game.timer * 10) > 0 then
+            markerOffset = -1
+          end
+
+          if tile.direction == "U" or tile.direction == "D" then
+            my = my + markerOffset
+          else
+            mx = mx + markerOffset
+          end
+
+          lg.draw(sheet, tile.sprite, mx, my)
         end
 
         exitMarkers[#exitMarkers + 1] = { draw = draw }

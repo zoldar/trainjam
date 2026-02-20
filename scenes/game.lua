@@ -7,7 +7,7 @@ local collisions = require("lib.collisions")
 local level = require("logic.level")
 local lg = love.graphics
 
-local game = { }
+local game = {}
 
 local function probeRail(position, direction)
   local newPosition = position + DIRECTIONS[direction]
@@ -212,7 +212,7 @@ local function switchNextLever(train)
 end
 
 local function maybeSwitchLever(train)
-  if not train.switchTried and train.nextTurn and train.position:distance(train.nextTurn) > 2 then
+  if not train.switchTried and train.nextTurn and train.position:distance(train.nextTurn) >= 2 then
     if love.math.random(1, LEVER_SWITCH_FACTOR) == 1 then
       switchNextLever(train)
     end
@@ -222,7 +222,13 @@ local function maybeSwitchLever(train)
 end
 
 local function drawMarkers()
+  local markerOffset = 0
+  if game.started and math.sin(game.timer * 10) > 0 then
+    markerOffset = -1
+  end
+
   local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
+  playerMarker.y = playerMarker.y + markerOffset
 
   lg.setColor(1, 1, 1, 0.6)
 
@@ -249,10 +255,12 @@ function game:init(levelName)
     switchNextLever(game.playerTrain)
   end)
 
+  game.timer = 0
   game.started = false
 end
 
 function game:update(dt)
+  game.timer = game.timer + dt
   if not game.started then
     game.started = true
     scenes.push("countdown")
