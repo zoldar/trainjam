@@ -29,7 +29,7 @@ local function probeRail(position, direction)
 end
 
 local function probe(startPosition, startDirection, fullPath)
-  local position, direction = startPosition, startDirection
+  local position, direction = probeRail(startPosition, startDirection)
   local canContinue = true
 
   if not game.rails[tostring(position)] then
@@ -256,6 +256,7 @@ function game:update(dt)
   if not game.started then
     game.started = true
     scenes.push("countdown")
+    game.playerTrain.nextTurn = probe(game.playerTrain.position, game.playerTrain.direction)
   end
 
   for idx = #game.trains, 1, -1 do
