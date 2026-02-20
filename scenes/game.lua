@@ -28,22 +28,24 @@ local function probeRail(position, direction)
 end
 
 local function probe(startPosition, startDirection, fullPath)
+  local prevDirection = startDirection
   local position, direction = probeRail(startPosition, startDirection)
   local canContinue = true
 
   if not game.rails[tostring(position)] then
-    return position, false
+    return position, prevDirection, false
   end
 
   while fullPath or not game.rails[tostring(position)].switchable do
+    prevDirection = direction
     position, direction, canContinue = probeRail(position, direction)
 
     if not canContinue then
-      return position, false
+      return position, prevDirection, false
     end
   end
 
-  return position, true
+  return position, prevDirection, true
 end
 
 local function turnWagon(wagon)
@@ -111,7 +113,7 @@ local function moveWagon(wagon, speed, dt)
   if position.x ~= wagon.position.x or position.y ~= wagon.position.y then
     wagon.position = position
     turnWagon(wagon)
-    wagon.nextTurn = probe(wagon.position, wagon.direction)
+    wagon.nextTurn, wagon.nextTurnDirection = probe(wagon.position, wagon.direction)
     collectPickup(wagon)
   else
     wagon.position = position
@@ -312,7 +314,8 @@ function game:update(dt)
 
   if game.playerTrain and not game.started then
     scenes.push("countdown")
-    game.playerTrain.nextTurn = probe(game.playerTrain.position, game.playerTrain.direction)
+    game.playerTrain.nextTurn, game.playerTrain.nextTurnDirection =
+      probe(game.playerTrain.position, game.playerTrain.direction)
   elseif not game.started then
     game.started = true
   end

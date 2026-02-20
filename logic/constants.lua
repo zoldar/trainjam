@@ -58,6 +58,13 @@ INVERSE_RAIL_2WAY = {
   },
 }
 
+INVERSE_RAIL_1WAY = {
+  down = "D",
+  up = "U",
+  left = "L",
+  right = "R",
+}
+
 INVERSE = {
   up = "down",
   down = "up",

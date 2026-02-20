@@ -27,6 +27,13 @@ local function getSwitchedFromTo(directions, switch)
   return INVERSE_RAIL_2WAY[switchedFrom][switchedTo]
 end
 
+local function getSwitchedTo(playerDirection, directions, switchDirections)
+  local comingFrom = INVERSE[playerDirection]
+  local switchedTo = switchDirections[comingFrom] or directions[comingFrom]
+
+  return INVERSE_RAIL_1WAY[switchedTo]
+end
+
 function _M.load(game, level)
   local map = tiled.loadMap(require("assets." .. level))
   local playerPosition
@@ -303,15 +310,26 @@ function _M.load(game, level)
             end
 
             if not isNext then
-              lg.setColor(1, 1, 1, 0.3)
-            end
+              lg.setColor(1, 1, 1, 0.4)
 
-            lg.draw(
-              map.sheets.tileset_objects.image,
-              arrowSprites[getSwitchedFromTo(directions, lever)],
-              rx,
-              ry
-            )
+              lg.draw(
+                map.sheets.tileset_objects.image,
+                arrowSprites[getSwitchedFromTo(directions, lever)],
+                rx,
+                ry
+              )
+            else
+              lg.draw(
+                map.sheets.tileset_objects.image,
+                arrowSprites[getSwitchedTo(
+                  game.playerTrain.nextTurnDirection,
+                  directions.fixed,
+                  switchDirections()
+                )],
+                rx,
+                ry
+              )
+            end
 
             lg.setColor(1, 1, 1, 1)
           end
