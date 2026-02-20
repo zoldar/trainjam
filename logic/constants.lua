@@ -80,10 +80,10 @@ ORIENTATION = {
 }
 
 ORTHOGONAL = {
-  up = DIRECTIONS.right,
-  down = DIRECTIONS.right,
-  left = DIRECTIONS.up,
-  right = DIRECTIONS.down,
+  up = { DIRECTIONS.left, DIRECTIONS.right },
+  down = { DIRECTIONS.left, DIRECTIONS.right },
+  left = { DIRECTIONS.up, DIRECTIONS.down },
+  right = { DIRECTIONS.up, DIRECTIONS.down },
 }
 
 HITBOX_SHRINK = 3

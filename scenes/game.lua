@@ -84,6 +84,20 @@ local function roundByDirection(position, direction)
   return v(x, y)
 end
 
+local function collectPickup(wagon)
+  if wagon.trainId and wagon.state == "empty" then
+    for _, d in ipairs(ORTHOGONAL[wagon.direction]) do
+      local position = wagon.position + d
+      local pickup = game.pickups[tostring(position)]
+
+      if pickup and not pickup.collected then
+        pickup.collected = true
+        wagon.state = "full"
+      end
+    end
+  end
+end
+
 local function moveWagon(wagon, speed, dt)
   wagon.realPosition = wagon.realPosition + DIRECTIONS[wagon.direction] * speed * dt
   local position = wagon.realPosition / TILE_SIZE
@@ -94,6 +108,7 @@ local function moveWagon(wagon, speed, dt)
     wagon.position = position
     turnWagon(wagon)
     wagon.nextTurn = probe(wagon.position, wagon.direction)
+    collectPickup(wagon)
   else
     wagon.position = position
   end
@@ -159,6 +174,19 @@ local function isOutOfMap(train)
   end)
 
   return allOut
+end
+
+local function wagonsFull()
+  local allFull = true
+
+  for _, t in ipairs(game.playerTrain.tail) do
+    if t.state == "empty" then
+      allFull = false
+      break
+    end
+  end
+
+  return allFull
 end
 
 local function switchLever(x, y, tilePosition)
@@ -234,7 +262,11 @@ function game:update(dt)
   end
 
   if isOutOfMap(game.playerTrain) then
-    scenes.push("won")
+    if wagonsFull() then
+      scenes.push("won")
+    else
+      scenes.push("lost")
+    end
   end
 end
 
@@ -255,6 +287,10 @@ function game:draw()
 
   for _, t in ipairs(game.trains) do
     t.draw()
+  end
+
+  for _, p in pairs(game.pickups) do
+    p.draw()
   end
 
   drawMarkers()

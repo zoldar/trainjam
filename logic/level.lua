@@ -34,6 +34,7 @@ function _M.load(game, level)
   local rails = {}
   local levers = {}
   local trains = {}
+  local pickups = {}
   local playerTrain
 
   local objectSheet = map.sheets.tileset_objects.image
@@ -111,7 +112,7 @@ function _M.load(game, level)
           playerTrain.speed = TRAIN_SPEED
         end
       else
-        wagons[tostring(position)] = map.byId[spriteId].orientation
+        wagons[tostring(position)] = map.byId[spriteId].state
       end
     end
   end
@@ -121,7 +122,7 @@ function _M.load(game, level)
 
     while wagons[tostring(position)] do
       tail[#tail + 1] = {
-        state = "empty",
+        state = wagons[tostring(position)],
         trainId = train.id,
         position = position,
         realPosition = position * TILE_SIZE,
@@ -184,6 +185,18 @@ function _M.load(game, level)
         end
 
         levers[strPosition] = { draw = draw, state = tile.state }
+      end
+
+      if map.layers.pickups[x] and map.layers.pickups[x][y] then
+        local tile = map.byId[map.layers.pickups[x][y]]
+        local sheet = map.sheets[tile.sheetName].image
+        local draw = function()
+          if not game.pickups[strPosition].collected then
+            lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
+          end
+        end
+
+        pickups[strPosition] = { draw = draw, collected = false }
       end
 
       if map.layers.rails[x] and map.layers.rails[x][y] then
@@ -266,6 +279,7 @@ function _M.load(game, level)
   game.rails = rails
   game.levers = levers
   game.trains = trains
+  game.pickups = pickups
   game.playerTrain = playerTrain
   game.markerSprites = markerSprites
 
