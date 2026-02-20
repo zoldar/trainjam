@@ -289,7 +289,7 @@ function game:init(levelName)
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function(pos)
     if game.started then
       if game.levelName == "level0" then
-        scenes.switch("game", "level1")
+        scenes.switch("game", FIRST_LEVEL)
       else
         if optionsClicked(pos.x, pos.y) then
           scenes.push("menu", game.levelName, game.started)
@@ -304,7 +304,7 @@ function game:init(levelName)
   game.actionListener = BUS:subscribe("keypressed_use", function()
     if game.started then
       if game.levelName == "level0" then
-        scenes.switch("game", "level1")
+        scenes.switch("game", FIRST_LEVEL)
       else
         switchNextLever(game.playerTrain)
       end

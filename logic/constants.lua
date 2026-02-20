@@ -98,10 +98,13 @@ ORTHOGONAL = {
 
 LEVELS = {
   level1 = "level2",
-  level2 = "level0",
+  level2 = "level4",
+  level4 = "level3",
+  level3 = "level0",
 }
 
 HITBOX_SHRINK = 3
 
+FIRST_LEVEL = "level1"
 TRAIN_SPEED = 35
 LEVER_SWITCH_FACTOR = 3
