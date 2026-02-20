@@ -1,5 +1,4 @@
 local assets = require("assets")
-local keys = require("lib.keys")
 local v = require("lib.vector")
 local camera = require("lib.camera")
 local scenes = require("lib.scenes")
@@ -67,6 +66,7 @@ local function turnWagon(wagon)
 
       train.speed = 0
       train.destroyed = true
+      assets.sounds.explosion:play()
     end
   end
 end
@@ -96,6 +96,7 @@ local function collectPickup(wagon)
       if pickup and not pickup.collected then
         pickup.collected = true
         wagon.state = "full"
+        assets.sounds.pickup:play()
       end
     end
   end
@@ -154,6 +155,7 @@ local function checkCollisions(train)
           if collisions.aabb(x1, y1, w, h, x2, y2, w, h) then
             train.speed = 0
             train.destroyed = true
+            assets.sounds.explosion:play()
           end
         end
       end)
@@ -201,6 +203,7 @@ local function switchLever(x, y, tilePosition)
 
   if lever then
     lever.state = lever.state == "switchL" and "switchR" or "switchL"
+    assets.sounds.switch:clone():play()
   end
 end
 
@@ -261,7 +264,12 @@ end
 
 function game:update(dt)
   game.timer = game.timer + dt
-  game.timeLeft = game.timeLeft - dt
+
+  local newTimeLeft = game.timeLeft - dt
+  if newTimeLeft <= 9 and math.ceil(newTimeLeft) < math.ceil(game.timeLeft) then
+    assets.sounds.warning:play()
+  end
+  game.timeLeft = newTimeLeft
 
   if not game.started then
     game.started = true

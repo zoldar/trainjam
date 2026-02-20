@@ -74,6 +74,10 @@ function _M.load(game, level)
         markerOffset = -1
       end
 
+      if train.destroyed then
+        lg.setColor(0.5, 0.5, 0.5)
+      end
+
       lg.draw(
         trainSheet,
         trainSprites["train_front_" .. orientation],
@@ -92,6 +96,8 @@ function _M.load(game, level)
           t.realPosition.y + markerOffset
         )
       end
+
+      lg.setColor(1, 1, 1)
     end
   end
 

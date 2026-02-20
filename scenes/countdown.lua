@@ -1,4 +1,5 @@
 local lg = love.graphics
+local assets = require("assets")
 local scenes = require("lib.scenes")
 local camera = require("lib.camera")
 
@@ -11,10 +12,22 @@ end
 function scene:init()
   self.camera = camera:new()
   self.countdown = 3
+
+  assets.sounds.blip1:play()
 end
 
 function scene:update(dt)
-  self.countdown = self.countdown - dt
+  local newCountdown = self.countdown - dt
+
+  if math.ceil(newCountdown) < math.ceil(self.countdown) then
+    if math.ceil(newCountdown) > 0 then
+      assets.sounds.blip1:play()
+    else
+      assets.sounds.blip2:play()
+    end
+  end
+
+  self.countdown = newCountdown
 
   if self.countdown <= 0 then
     scenes.pop()
