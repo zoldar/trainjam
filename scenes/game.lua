@@ -248,7 +248,7 @@ end
 function game:init(levelName)
   game.camera = camera:new()
 
-  game = level.load(game, levelName or "level2")
+  game = level.load(game, levelName or "level1")
 
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function()
     switchNextLever(game.playerTrain)

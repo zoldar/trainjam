@@ -9,19 +9,19 @@
     ],
     "fileStates": {
         "level1.tmx": {
-            "scale": 3,
-            "selectedLayer": 2,
+            "scale": 2,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 122.33333333333331,
-                "y": 62.33333333333332
+                "x": 177.5,
+                "y": 142.5
             }
         },
         "level2.tmx": {
-            "scale": 2.7953,
+            "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 220.19103495152578,
-                "y": 92.47665724609165
+                "x": 227.33333333333334,
+                "y": 178
             }
         },
         "tileset_cart.tsx": {
