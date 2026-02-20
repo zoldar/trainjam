@@ -257,12 +257,14 @@ function game:update(dt)
     checkCollisions(train)
   end
 
+  game.wagonsFull = wagonsFull()
+
   if game.playerTrain.destroyed then
     scenes.push("lost")
   end
 
   if isOutOfMap(game.playerTrain) then
-    if wagonsFull() then
+    if wagonsFull then
       scenes.push("won")
     else
       scenes.push("lost")
@@ -291,6 +293,12 @@ function game:draw()
 
   for _, p in pairs(game.pickups) do
     p.draw()
+  end
+
+  if game.wagonsFull then
+    for _, m in ipairs(game.exitMarkers) do
+      m.draw()
+    end
   end
 
   drawMarkers()
