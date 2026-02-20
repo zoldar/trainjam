@@ -56,6 +56,10 @@ local function turnWagon(wagon)
 
     local exit = rail.switchDirections()[comingFrom] or rail.directions[comingFrom]
 
+    if rail.switchable and wagon.id then
+      wagon.switchTried = false
+    end
+
     if exit and wagon.direction ~= exit then
       wagon.direction = exit
       wagon.realPosition = wagon.position * TILE_SIZE
@@ -208,6 +212,16 @@ local function switchNextLever(train)
   end
 end
 
+local function maybeSwitchLever(train)
+  if not train.switchTried and train.nextTurn and train.position:distance(train.nextTurn) > 2 then
+    if love.math.random(1, LEVER_SWITCH_FACTOR) == 1 then
+      switchNextLever(train)
+    end
+
+    train.switchTried = true
+  end
+end
+
 local function drawMarkers()
   local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
 
@@ -255,6 +269,10 @@ function game:update(dt)
 
     moveTrain(train, dt)
     checkCollisions(train)
+
+    if train.id ~= game.playerTrain.id then
+      maybeSwitchLever(train)
+    end
   end
 
   game.wagonsFull = wagonsFull()

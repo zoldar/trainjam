@@ -10,6 +10,12 @@ function Vector.new(x, y)
   return v
 end
 
+function Vector:distance(other)
+  local dx = self.x - other.x
+	local dy = self.y - other.y
+	return math.sqrt(dx * dx + dy * dy)
+end
+
 function Vector.__add(a, b)
   return Vector.new(a.x + b.x, a.y + b.y)
 end
