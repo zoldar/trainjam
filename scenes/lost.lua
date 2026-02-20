@@ -15,9 +15,9 @@ function lost:init(reason, currentLevel)
   end)
 
   if reason == "crashed" then
-    self.message = "YOU HAVE CRASHED."
+    self.message = "YOU CRASHED."
   elseif reason == "timeout" then
-    self.message = "YOU HAVE RAN OUT OF TIME."
+    self.message = "YOU RAN OUT OF TIME."
   elseif reason == "freight_missing" then
     self.message = "YOU DID NOT COLLECT ALL FREIGHT."
   else

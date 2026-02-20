@@ -2,8 +2,13 @@ local v = require("lib.vector")
 
 GAME_WIDTH, GAME_HEIGHT = 320, 240
 
+BUTTON_WIDTH = 140
+BUTTON_HEIGHT = 30
+BUTTON_MARGIN = 3
+
 BINDINGS = {
-  use = { "space" },
+  menu = { "escape" },
+  use = { "space", "z", "x" },
   left = { "left", "a" },
   right = { "right", "d" },
   up = { "up", "w" },

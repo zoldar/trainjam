@@ -264,6 +264,19 @@ local function drawIntro()
   )
 end
 
+local function drawOptionButton()
+  lg.printf("OPTIONS", assets.fonts.tiny, 4, 2, GAME_WIDTH, "left")
+end
+
+local function optionsClicked(x, y)
+  local lx, ly = game.camera:worldCoords(x, y)
+
+  local w = assets.fonts.tiny:getWidth("OPTIONS") + 8
+  local h = assets.fonts.tiny:getHeight() + 4
+
+  return lx > 0 and lx < w and ly > 0 and ly < h
+end
+
 function game:init(levelName)
   game = {}
 
@@ -273,12 +286,17 @@ function game:init(levelName)
 
   game = level.load(game, levelName)
 
-  game.mouseListener = BUS:subscribe("mouseclicked_primary", function()
+  game.mouseListener = BUS:subscribe("mouseclicked_primary", function(pos)
     if game.started then
       if game.levelName == "level0" then
         scenes.switch("game", "level1")
       else
-        switchNextLever(game.playerTrain)
+        if optionsClicked(pos.x, pos.y) then
+          scenes.push("menu", game.levelName, game.started)
+          game.started = false
+        else
+          switchNextLever(game.playerTrain)
+        end
       end
     end
   end)
@@ -293,7 +311,19 @@ function game:init(levelName)
     end
   end)
 
-  self.gameStartedListener = BUS:subscribeOnce("game_started", function()
+  game.menuListener = BUS:subscribe("keypressed_menu", function()
+    if game.levelName ~= "level0" then
+      if scenes.currentFocus() == "menu" then
+        scenes.pop()
+        game.started = true
+      else
+        scenes.push("menu", game.levelName, game.started)
+        game.started = false
+      end
+    end
+  end)
+
+  self.gameStartedListener = BUS:subscribe("game_started", function()
     game.started = true
   end)
 
@@ -385,7 +415,7 @@ function game:draw()
 
   drawMarkers()
 
-  if game.timeLeft and game.started then
+  if game.timeLeft then
     if game.timeLeft <= 9 then
       lg.setColor(217 / 255, 53 / 255, 50 / 255)
     end
@@ -402,6 +432,8 @@ function game:draw()
 
   if game.levelName == "level0" then
     drawIntro()
+  else
+    drawOptionButton()
   end
 
   game.camera:detach()
@@ -411,6 +443,7 @@ function game:close()
   BUS:unsubscribe(game.mouseListener)
   BUS:unsubscribe(game.actionListener)
   BUS:unsubscribe(game.gameStartedListener)
+  BUS:unsubscribe(game.menuListener)
 end
 
 return game
