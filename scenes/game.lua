@@ -291,18 +291,18 @@ function game:update(dt)
   game.wagonsFull = wagonsFull()
 
   if game.playerTrain.destroyed then
-    scenes.push("lost")
+    scenes.push("lost", "crashed")
   end
 
   if game.timeLeft <= 0 then
-    scenes.push("lost")
+    scenes.push("lost", "timeout")
   end
 
   if isOutOfMap(game.playerTrain) then
     if game.wagonsFull then
       scenes.push("won")
     else
-      scenes.push("lost")
+      scenes.push("lost", "freight_missing")
     end
   end
 end

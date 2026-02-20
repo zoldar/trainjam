@@ -4,7 +4,7 @@ local camera = require("lib.camera")
 
 local lost = {}
 
-function lost:init()
+function lost:init(reason)
   BUS:subscribeOnce("keypressed_use", function()
     scenes.switch("game")
   end)
@@ -12,6 +12,16 @@ function lost:init()
   BUS:subscribeOnce("mouseclicked_primary", function()
     scenes.switch("game", "level2")
   end)
+
+  if reason == "crashed" then
+    self.message = "YOU HAVE CRASHED."
+  elseif reason == "timeout" then
+    self.message = "YOU HAVE RAN OUT OF TIME."
+  elseif reason == "freight_missing" then
+    self.message = "YOU DID NOT COLLECT ALL FREIGHT."
+  else
+    self.message = "YOU LOST."
+  end
 
   self.camera = camera:new()
 end
@@ -25,7 +35,7 @@ function lost:draw()
 
   lg.setColor(1, 1, 1, 1)
 
-  lg.printf("YOU LOST.\nPRESS SPACE TO TRY AGAIN", 0, GAME_HEIGHT / 2, GAME_WIDTH, "center")
+  lg.printf(self.message .. "\nPRESS SPACE TO TRY AGAIN", 0, GAME_HEIGHT / 2, GAME_WIDTH, "center")
 
   self.camera:detach()
 end
