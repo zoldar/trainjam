@@ -291,7 +291,7 @@ function game:init(levelName)
     end
   end)
 
-  BUS:subscribeOnce("game_started", function()
+  self.gameStartedListener = BUS:subscribeOnce("game_started", function()
     game.started = true
   end)
 
@@ -403,6 +403,7 @@ end
 function game:close()
   BUS:unsubscribe(game.mouseListener)
   BUS:unsubscribe(game.actionListener)
+  BUS:unsubscribe(game.gameStartedListener)
 end
 
 return game

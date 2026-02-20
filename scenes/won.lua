@@ -6,11 +6,11 @@ local camera = require("lib.camera")
 local won = {}
 
 function won:init(currentLevel)
-  BUS:subscribeOnce("keypressed_use", function()
+  self.actionListener = BUS:subscribeOnce("keypressed_use", function()
     scenes.switch("game", LEVELS[currentLevel])
   end)
 
-  BUS:subscribeOnce("mouseclicked_primary", function()
+  self.mouseListener = BUS:subscribeOnce("mouseclicked_primary", function()
     scenes.switch("game", LEVELS[currentLevel])
   end)
 
@@ -36,6 +36,11 @@ function won:draw()
   )
 
   self.camera:detach()
+end
+
+function won:close()
+  BUS:unsubscribe(self.mouseListener)
+  BUS:unsubscribe(self.actionListener)
 end
 
 return won

@@ -38,7 +38,7 @@ function Bus:subscribeOnce(event, callback)
 end
 
 function Bus:unsubscribe(event, callback)
-  if callback == nil then
+  if callback == nil and event ~= nil then
     event, callback = unpack(event)
   end
 
