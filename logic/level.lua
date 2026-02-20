@@ -192,7 +192,9 @@ function _M.load(game, level)
         local sheet = map.sheets[tile.sheetName].image
         local draw = function()
           if not game.pickups[strPosition].collected then
-            lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
+            local px, py = x * TILE_SIZE, y * TILE_SIZE
+            lg.draw(map.sheets.tileset_objects.image, markerSprites.yellow, px, py - TILE_SIZE * 0.75)
+            lg.draw(sheet, tile.sprite, px, py)
           end
         end
 
