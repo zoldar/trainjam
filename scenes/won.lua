@@ -1,4 +1,5 @@
 local lg = love.graphics
+local assets = require("assets")
 local scenes = require("lib.scenes")
 local camera = require("lib.camera")
 
@@ -25,7 +26,14 @@ function won:draw()
 
   lg.setColor(1, 1, 1, 1)
 
-  lg.printf("YOU WON!\nPRESS SPACE TO CONTINUE", 0, GAME_HEIGHT / 2, GAME_WIDTH, "center")
+  lg.printf(
+    "YOU WON!\nPRESS SPACE TO CONTINUE",
+    assets.fonts.standard,
+    0,
+    GAME_HEIGHT / 2,
+    GAME_WIDTH,
+    "center"
+  )
 
   self.camera:detach()
 end

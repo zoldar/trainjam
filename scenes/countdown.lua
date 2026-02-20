@@ -43,7 +43,14 @@ function scene:draw()
 
   lg.setColor(1, 1, 1, 1)
 
-  lg.printf("STARTING IN " .. toDisplay(self.countdown), 0, GAME_HEIGHT / 2, GAME_WIDTH, "center")
+  lg.printf(
+    "STARTING IN " .. toDisplay(self.countdown),
+    assets.fonts.standard,
+    0,
+    GAME_HEIGHT / 2,
+    GAME_WIDTH,
+    "center"
+  )
 
   self.camera:detach()
 end

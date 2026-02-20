@@ -342,7 +342,14 @@ function game:draw()
     if game.timeLeft <= 9 then
       lg.setColor(217 / 255, 53 / 255, 50 / 255)
     end
-    lg.printf(tostring(math.max(math.ceil(game.timeLeft), 0)), 0, 3, GAME_WIDTH, "center")
+    lg.printf(
+      tostring(math.max(math.ceil(game.timeLeft), 0)),
+      assets.fonts.standard,
+      0,
+      3,
+      GAME_WIDTH,
+      "center"
+    )
     lg.setColor(1, 1, 1)
   end
 

@@ -21,9 +21,19 @@ function intro:draw()
   self.camera:attach()
 
   lg.printf(
-    "TRAIN JAM\nPRESS SPACE TO CONTINUE",
+    "TRAIN JAM",
+    assets.fonts.logo,
     0,
-    GAME_HEIGHT / 2,
+    10,
+    GAME_WIDTH,
+    "center"
+  )
+
+  lg.printf(
+    "PRESS SPACE TO CONTINUE",
+    assets.fonts.standard,
+    0,
+    GAME_HEIGHT - assets.fonts.standard:getHeight() - 20,
     GAME_WIDTH,
     "center"
   )

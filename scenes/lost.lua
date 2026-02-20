@@ -1,4 +1,5 @@
 local lg = love.graphics
+local assets = require("assets")
 local scenes = require("lib.scenes")
 local camera = require("lib.camera")
 
@@ -35,7 +36,14 @@ function lost:draw()
 
   lg.setColor(1, 1, 1, 1)
 
-  lg.printf(self.message .. "\nPRESS SPACE TO TRY AGAIN", 0, GAME_HEIGHT / 2, GAME_WIDTH, "center")
+  lg.printf(
+    self.message .. "\nPRESS SPACE TO TRY AGAIN",
+    assets.fonts.standard,
+    0,
+    GAME_HEIGHT / 2,
+    GAME_WIDTH,
+    "center"
+  )
 
   self.camera:detach()
 end

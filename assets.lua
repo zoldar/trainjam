@@ -6,7 +6,10 @@ local assets = {}
 
 function assets.load()
   assets.fonts = {
-    -- mono = lg.newFont("assets/dtm-mono.ttf", 20),
+    standard = lg.newFont("assets/Kenney Pixel.ttf", 24),
+    help = lg.newFont("assets/Kenney High.ttf", 23),
+    score = lg.newFont("assets/Kenney High.ttf", 32),
+    logo = lg.newFont("assets/Kenney Blocks.ttf", 56),
   }
 
   assets.levels = {
