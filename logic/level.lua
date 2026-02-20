@@ -294,7 +294,7 @@ function _M.load(game, level)
             end
 
             if not isNext then
-              lg.setColor(1, 1, 1, 0.2)
+              lg.setColor(1, 1, 1, 0.3)
             end
 
             lg.draw(
@@ -328,6 +328,7 @@ function _M.load(game, level)
   game.playerTrain = playerTrain
   game.markerSprites = markerSprites
   game.exitMarkers = exitMarkers
+  game.timeLeft = map.props.timer
 
   return game
 end

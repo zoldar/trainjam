@@ -261,6 +261,8 @@ end
 
 function game:update(dt)
   game.timer = game.timer + dt
+  game.timeLeft = game.timeLeft - dt
+
   if not game.started then
     game.started = true
     scenes.push("countdown")
@@ -281,6 +283,10 @@ function game:update(dt)
   game.wagonsFull = wagonsFull()
 
   if game.playerTrain.destroyed then
+    scenes.push("lost")
+  end
+
+  if game.timeLeft <= 0 then
     scenes.push("lost")
   end
 
@@ -324,7 +330,13 @@ function game:draw()
 
   drawMarkers()
 
-  lg.print("WIP")
+  if game.started then
+    if game.timeLeft <= 9 then
+      lg.setColor(217 / 255, 53 / 255, 50 / 255)
+    end
+    lg.printf(tostring(math.max(math.ceil(game.timeLeft), 0)), 0, 3, GAME_WIDTH, "center")
+    lg.setColor(1, 1, 1)
+  end
 
   game.camera:detach()
 end

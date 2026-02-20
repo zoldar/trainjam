@@ -7,6 +7,7 @@
   <property name="otherTrainsSpeed" type="float" value="0.5"/>
   <property name="playerTrainX" type="int" value="1"/>
   <property name="playerTrainY" type="int" value="11"/>
+  <property name="timer" value="40"/>
  </properties>
  <tileset firstgid="1" source="tileset_terrains.tsx"/>
  <tileset firstgid="57" source="tileset_rails.tsx"/>

@@ -14,7 +14,8 @@ return {
   properties = {
     ["otherTrainsSpeed"] = 0.5,
     ["playerTrainX"] = 1,
-    ["playerTrainY"] = 11
+    ["playerTrainY"] = 11,
+    ["timer"] = "40"
   },
   tilesets = {
     {
