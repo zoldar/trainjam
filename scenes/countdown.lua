@@ -30,6 +30,7 @@ function scene:update(dt)
   self.countdown = newCountdown
 
   if self.countdown <= 0 then
+    BUS:publish("game_started")
     scenes.pop()
   end
 end

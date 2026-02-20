@@ -84,8 +84,12 @@ ORTHOGONAL = {
   right = { DIRECTIONS.up, DIRECTIONS.down },
 }
 
+LEVELS = {
+  level1 = "level2",
+  level2 = "level0",
+}
+
 HITBOX_SHRINK = 3
 
 TRAIN_SPEED = 35
 LEVER_SWITCH_FACTOR = 3
-

@@ -5,13 +5,13 @@ local camera = require("lib.camera")
 
 local lost = {}
 
-function lost:init(reason)
+function lost:init(reason, currentLevel)
   BUS:subscribeOnce("keypressed_use", function()
-    scenes.switch("game")
+    scenes.switch("game", currentLevel)
   end)
 
   BUS:subscribeOnce("mouseclicked_primary", function()
-    scenes.switch("game", "level2")
+    scenes.switch("game", currentLevel)
   end)
 
   if reason == "crashed" then

@@ -263,25 +263,36 @@ local function drawIntro()
 end
 
 function game:init(levelName)
+  game = {}
+
   game.camera = camera:new()
+
   levelName = levelName or "level0"
 
   game = level.load(game, levelName)
 
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function()
-    if game.levelName == "level0" then
-      scenes.switch("game", "level1")
-    else
-      switchNextLever(game.playerTrain)
+    if game.started then
+      if game.levelName == "level0" then
+        scenes.switch("game", "level1")
+      else
+        switchNextLever(game.playerTrain)
+      end
     end
   end)
 
   game.actionListener = BUS:subscribe("keypressed_use", function()
-    if game.levelName == "level0" then
-      scenes.switch("game", "level1")
-    else
-      switchNextLever(game.playerTrain)
+    if game.started then
+      if game.levelName == "level0" then
+        scenes.switch("game", "level1")
+      else
+        switchNextLever(game.playerTrain)
+      end
     end
+  end)
+
+  BUS:subscribeOnce("game_started", function()
+    game.started = true
   end)
 
   game.timer = 0
@@ -300,7 +311,6 @@ function game:update(dt)
   end
 
   if game.playerTrain and not game.started then
-    game.started = true
     scenes.push("countdown")
     game.playerTrain.nextTurn = probe(game.playerTrain.position, game.playerTrain.direction)
   elseif not game.started then
@@ -321,18 +331,18 @@ function game:update(dt)
   game.wagonsFull = wagonsFull()
 
   if game.playerTrain and game.playerTrain.destroyed then
-    scenes.push("lost", "crashed")
+    scenes.push("lost", "crashed", game.levelName)
   end
 
   if game.timeLeft and game.timeLeft <= 0 then
-    scenes.push("lost", "timeout")
+    scenes.push("lost", "timeout", game.levelName)
   end
 
   if game.playerTrain and isOutOfMap(game.playerTrain) then
     if game.wagonsFull then
-      scenes.push("won")
+      scenes.push("won", game.levelName)
     else
-      scenes.push("lost", "freight_missing")
+      scenes.push("lost", "freight_missing", game.levelName)
     end
   end
 end

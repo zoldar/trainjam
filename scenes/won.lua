@@ -5,13 +5,13 @@ local camera = require("lib.camera")
 
 local won = {}
 
-function won:init()
+function won:init(currentLevel)
   BUS:subscribeOnce("keypressed_use", function()
-    scenes.switch("game", "level2")
+    scenes.switch("game", LEVELS[currentLevel])
   end)
 
   BUS:subscribeOnce("mouseclicked_primary", function()
-    scenes.switch("game", "level2")
+    scenes.switch("game", LEVELS[currentLevel])
   end)
 
   self.camera = camera:new()
