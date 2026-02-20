@@ -7,11 +7,11 @@ local intro = {}
 
 function intro:init()
   BUS:subscribeOnce("mouseclicked_primary", function()
-    scenes.switch("game")
+    scenes.switch("game", "level1")
   end)
 
   BUS:subscribeOnce("keypressed_use", function()
-    scenes.switch("game")
+    scenes.switch("game", "level1")
   end)
 
   self.camera = camera:new()
@@ -24,7 +24,7 @@ function intro:draw()
     "TRAIN JAM",
     assets.fonts.logo,
     0,
-    10,
+    0,
     GAME_WIDTH,
     "center"
   )
@@ -33,7 +33,7 @@ function intro:draw()
     "PRESS SPACE TO CONTINUE",
     assets.fonts.standard,
     0,
-    GAME_HEIGHT - assets.fonts.standard:getHeight() - 20,
+    GAME_HEIGHT - assets.fonts.standard:getHeight() - 30,
     GAME_WIDTH,
     "center"
   )

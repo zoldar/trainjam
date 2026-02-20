@@ -29,7 +29,10 @@ end
 
 function _M.load(game, level)
   local map = tiled.loadMap(require("assets." .. level))
-  local playerPosition = v(map.props.playerTrainX, map.props.playerTrainY)
+  local playerPosition
+  if map.props.playerTrainX and map.props.playerTrainY then
+    playerPosition = v(map.props.playerTrainX, map.props.playerTrainY)
+  end
   local ground = {}
   local rails = {}
   local levers = {}
@@ -269,7 +272,7 @@ function _M.load(game, level)
         local leverPosition
         local leverState
 
-        if tile.switch then
+        if playerPosition and tile.switch then
           leverPosition = position + DIRECTIONS[tile.switch]
           switchDirections = function()
             return directions[levers[tostring(leverPosition)].state]
@@ -292,7 +295,7 @@ function _M.load(game, level)
 
           lg.draw(sheet, tile.sprite, rx, ry)
 
-          if lever then
+          if game.playerTrain and lever then
             local isNext = game.playerTrain.nextTurn and game.playerTrain.nextTurn == v(x, y)
 
             if game.started and math.sin(game.timer * 20) > 0 then
@@ -325,6 +328,7 @@ function _M.load(game, level)
     end
   end
 
+  game.levelName = level
   game.map = map
   game.ground = ground
   game.rails = rails

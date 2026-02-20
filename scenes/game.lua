@@ -184,10 +184,12 @@ end
 local function wagonsFull()
   local allFull = true
 
-  for _, t in ipairs(game.playerTrain.tail) do
-    if t.state == "empty" then
-      allFull = false
-      break
+  if game.playerTrain then
+    for _, t in ipairs(game.playerTrain.tail) do
+      if t.state == "empty" then
+        allFull = false
+        break
+      end
     end
   end
 
@@ -225,37 +227,61 @@ local function maybeSwitchLever(train)
 end
 
 local function drawMarkers()
-  local markerOffset = 0
-  if game.started and math.sin(game.timer * 10) > 0 then
-    markerOffset = -1
+  if game.playerTrain then
+    local markerOffset = 0
+    if game.started and math.sin(game.timer * 10) > 0 then
+      markerOffset = -1
+    end
+
+    local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
+    playerMarker.y = playerMarker.y + markerOffset
+
+    lg.setColor(1, 1, 1, 0.6)
+
+    lg.draw(
+      game.map.sheets.tileset_objects.image,
+      game.markerSprites.white,
+      playerMarker.x,
+      playerMarker.y
+    )
+
+    lg.setColor(1, 1, 1, 1)
   end
+end
 
-  local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
-  playerMarker.y = playerMarker.y + markerOffset
+local function drawIntro()
+  lg.printf("TRAIN JAM", assets.fonts.logo, 0, 0, GAME_WIDTH, "center")
 
-  lg.setColor(1, 1, 1, 0.6)
-
-  lg.draw(
-    game.map.sheets.tileset_objects.image,
-    game.markerSprites.white,
-    playerMarker.x,
-    playerMarker.y
+  lg.printf(
+    "PRESS SPACE TO CONTINUE",
+    assets.fonts.standard,
+    0,
+    GAME_HEIGHT - assets.fonts.standard:getHeight() - 30,
+    GAME_WIDTH,
+    "center"
   )
-
-  lg.setColor(1, 1, 1, 1)
 end
 
 function game:init(levelName)
   game.camera = camera:new()
+  levelName = levelName or "level0"
 
-  game = level.load(game, levelName or "level1")
+  game = level.load(game, levelName)
 
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function()
-    switchNextLever(game.playerTrain)
+    if game.levelName == "level0" then
+      scenes.switch("game", "level1")
+    else
+      switchNextLever(game.playerTrain)
+    end
   end)
 
   game.actionListener = BUS:subscribe("keypressed_use", function()
-    switchNextLever(game.playerTrain)
+    if game.levelName == "level0" then
+      scenes.switch("game", "level1")
+    else
+      switchNextLever(game.playerTrain)
+    end
   end)
 
   game.timer = 0
@@ -265,16 +291,20 @@ end
 function game:update(dt)
   game.timer = game.timer + dt
 
-  local newTimeLeft = game.timeLeft - dt
-  if newTimeLeft <= 9 and math.ceil(newTimeLeft) < math.ceil(game.timeLeft) then
-    assets.sounds.warning:play()
+  if game.timeLeft then
+    local newTimeLeft = game.timeLeft - dt
+    if newTimeLeft <= 9 and math.ceil(newTimeLeft) < math.ceil(game.timeLeft) then
+      assets.sounds.warning:play()
+    end
+    game.timeLeft = newTimeLeft
   end
-  game.timeLeft = newTimeLeft
 
-  if not game.started then
+  if game.playerTrain and not game.started then
     game.started = true
     scenes.push("countdown")
     game.playerTrain.nextTurn = probe(game.playerTrain.position, game.playerTrain.direction)
+  elseif not game.started then
+    game.started = true
   end
 
   for idx = #game.trains, 1, -1 do
@@ -283,22 +313,22 @@ function game:update(dt)
     moveTrain(train, dt)
     checkCollisions(train)
 
-    if train.id ~= game.playerTrain.id then
+    if game.playerTrain and train.id ~= game.playerTrain.id then
       maybeSwitchLever(train)
     end
   end
 
   game.wagonsFull = wagonsFull()
 
-  if game.playerTrain.destroyed then
+  if game.playerTrain and game.playerTrain.destroyed then
     scenes.push("lost", "crashed")
   end
 
-  if game.timeLeft <= 0 then
+  if game.timeLeft and game.timeLeft <= 0 then
     scenes.push("lost", "timeout")
   end
 
-  if isOutOfMap(game.playerTrain) then
+  if game.playerTrain and isOutOfMap(game.playerTrain) then
     if game.wagonsFull then
       scenes.push("won")
     else
@@ -338,7 +368,7 @@ function game:draw()
 
   drawMarkers()
 
-  if game.started then
+  if game.timeLeft and game.started then
     if game.timeLeft <= 9 then
       lg.setColor(217 / 255, 53 / 255, 50 / 255)
     end
@@ -351,6 +381,10 @@ function game:draw()
       "center"
     )
     lg.setColor(1, 1, 1)
+  end
+
+  if game.levelName == "level0" then
+    drawIntro()
   end
 
   game.camera:detach()
