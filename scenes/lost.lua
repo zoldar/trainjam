@@ -19,7 +19,13 @@ end
 function lost:draw()
   self.camera:attach()
 
-  lg.printf("YOU LOST.\nPRESS SPACE TO RESTART", 0, GAME_HEIGHT / 2, GAME_WIDTH, "center")
+  lg.setColor(0, 0, 0, 0.4)
+
+  lg.rectangle("fill", 0, 0, GAME_WIDTH, GAME_HEIGHT)
+
+  lg.setColor(1, 1, 1, 1)
+
+  lg.printf("YOU LOST.\nPRESS SPACE TO TRY AGAIN", 0, GAME_HEIGHT / 2, GAME_WIDTH, "center")
 
   self.camera:detach()
 end

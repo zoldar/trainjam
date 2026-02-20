@@ -18,7 +18,7 @@ function love.load()
   screen.load(GAME_WIDTH, GAME_HEIGHT)
   keys.configure(BINDINGS)
   assets.load()
-  scenes.init("scenes/", "game")
+  scenes.init("scenes/", "intro")
 end
 
 function love.keypressed(key)
