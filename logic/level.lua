@@ -289,8 +289,12 @@ function _M.load(game, level)
           if lever then
             local isNext = game.playerTrain.nextTurn and game.playerTrain.nextTurn == v(x, y)
 
+            if game.started and math.sin(game.timer * 20) > 0 then
+              lg.setColor(1, 1, 1, 0.7)
+            end
+
             if not isNext then
-              lg.setColor(1, 1, 1, 0.5)
+              lg.setColor(1, 1, 1, 0.2)
             end
 
             lg.draw(
