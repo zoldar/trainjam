@@ -7,9 +7,9 @@ local inspect = require("vendor.inspect")
 
 require("logic.constants")
 
-INSPECT = function(x)
-  print(inspect(x))
-  return x
+INSPECT = function(...)
+  print(inspect({...}))
+  return ...
 end
 
 BUS = Bus:new()

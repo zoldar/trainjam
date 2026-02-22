@@ -36,11 +36,13 @@ local function probe(startPosition, startDirection, fullPath)
     return position, prevDirection, false
   end
 
-  while fullPath or not game.rails[tostring(position)].switchable do
+  local positionBeforeProbe = v(position.x, position.y)
+
+  while fullPath or not game.rails[tostring(position)].willSwitch(prevDirection) do
     prevDirection = direction
     position, direction, canContinue = probeRail(position, direction)
 
-    if not canContinue then
+    if not canContinue or position == positionBeforeProbe then
       return position, prevDirection, false
     end
   end

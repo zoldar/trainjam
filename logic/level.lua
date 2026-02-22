@@ -27,6 +27,15 @@ local function getSwitchedFromTo(directions, switch)
   return INVERSE_RAIL_2WAY[switchedFrom][switchedTo]
 end
 
+local function isSwitching(playerDirection, directions)
+  local optionL =
+    RAIL_DIRECTIONS[getSwitchedFromTo(directions, "switchL")][INVERSE[playerDirection]]
+  local optionR =
+    RAIL_DIRECTIONS[getSwitchedFromTo(directions, "switchR")][INVERSE[playerDirection]]
+
+  return optionL and optionR
+end
+
 local function getSwitchedTo(playerDirection, directions, switchDirections)
   local comingFrom = INVERSE[playerDirection]
   local switchedTo = switchDirections[comingFrom] or directions[comingFrom]
@@ -289,11 +298,15 @@ function _M.load(game, level)
         local switchDirections
         local leverPosition
         local leverState
+        local willSwitch
 
         if playerPosition and tile.switch then
           leverPosition = position + DIRECTIONS[tile.switch]
           switchDirections = function()
             return directions[levers[tostring(leverPosition)].state]
+          end
+          willSwitch = function(playerDirection)
+            return isSwitching(playerDirection, directions)
           end
           leverState = function()
             return levers[tostring(leverPosition)].state
@@ -301,6 +314,9 @@ function _M.load(game, level)
         else
           switchDirections = function()
             return {}
+          end
+          willSwitch = function()
+            return false
           end
           leverState = function()
             return nil
@@ -320,16 +336,7 @@ function _M.load(game, level)
               lg.setColor(1, 1, 1, 0.7)
             end
 
-            if not isNext then
-              lg.setColor(1, 1, 1, 0.4)
-
-              lg.draw(
-                map.sheets.tileset_objects.image,
-                arrowSprites[getSwitchedFromTo(directions, lever)],
-                rx,
-                ry
-              )
-            else
+            if isNext then
               lg.draw(
                 map.sheets.tileset_objects.image,
                 arrowSprites[getSwitchedTo(
@@ -352,6 +359,7 @@ function _M.load(game, level)
           switchDirections = switchDirections,
           switchable = tile.switch,
           leverPosition = leverPosition,
+          willSwitch = willSwitch,
         }
       end
     end
