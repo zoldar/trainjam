@@ -167,6 +167,21 @@ local function checkCollisions(train)
   end)
 end
 
+local function getActiveTurns()
+  local turns = {}
+
+  for _, train in ipairs(game.trains) do
+    if train.nextTurn then
+      local rails = game.rails[tostring(train.nextTurn)]
+      if rails and rails.switchable then
+        turns[#turns + 1] = { position = train.nextTurn, direction = train.nextTurnDirection }
+      end
+    end
+  end
+
+  return turns
+end
+
 local function isOutOfMap(train)
   local allOut = true
 
@@ -185,19 +200,69 @@ local function isOutOfMap(train)
   return allOut
 end
 
-local function wagonsFull()
+local function allTrainsOutOfMap()
+  local allOut = true
+
+  for _, train in ipairs(game.trains) do
+    if not isOutOfMap(train) then
+      allOut = false
+      break
+    end
+  end
+
+  return allOut
+end
+
+local function wagonsFull(train)
   local allFull = true
 
-  if game.playerTrain then
-    for _, t in ipairs(game.playerTrain.tail) do
-      if t.state == "empty" then
-        allFull = false
-        break
-      end
+  for _, t in ipairs(train.tail) do
+    if t.state == "empty" then
+      allFull = false
+      break
     end
   end
 
   return allFull
+end
+
+local function anyWagonsFull()
+  local anyFull = false
+
+  for _, train in ipairs(game.trains) do
+    if wagonsFull(train) then
+      anyFull = true
+      break
+    end
+  end
+
+  return anyFull
+end
+
+local function allWagonsFull()
+  local allFull = true
+
+  for _, train in ipairs(game.trains) do
+    if not wagonsFull(train) then
+      allFull = false
+      break
+    end
+  end
+
+  return allFull
+end
+
+local function anyTrainDestroyed()
+  local anyDestroyed = false
+
+  for _, train in ipairs(game.trains) do
+    if train.destroyed then
+      anyDestroyed = true
+      break
+    end
+  end
+
+  return anyDestroyed
 end
 
 local function switchLever(x, y, tilePosition)
@@ -205,53 +270,37 @@ local function switchLever(x, y, tilePosition)
     x, y = math.floor(x / TILE_SIZE), math.floor(y / TILE_SIZE)
   end
 
-  local lever = game.levers[tostring(v(x, y))]
+  local rails = game.rails[tostring(v(x, y))]
 
-  if lever then
+  if rails and rails.switchable then
+    local lever = game.levers[tostring(rails.leverPosition)]
     lever.state = lever.state == "switchL" and "switchR" or "switchL"
     assets.sounds.switch:clone():play()
   end
 end
 
-local function switchNextLever(train)
-  local nextSwitch = game.rails[tostring(train.nextTurn)]
-  if nextSwitch and nextSwitch.switchable then
-    switchLever(nextSwitch.leverPosition.x, nextSwitch.leverPosition.y, true)
-  end
-end
-
-local function maybeSwitchLever(train)
-  if not train.switchTried and train.nextTurn and train.position:distance(train.nextTurn) >= 2 then
-    if love.math.random(1, LEVER_SWITCH_FACTOR) == 1 then
-      switchNextLever(train)
-    end
-
-    train.switchTried = true
-  end
-end
-
-local function drawMarkers()
-  if game.playerTrain then
-    local markerOffset = 0
-    if game.started and math.sin(game.timer * 10) > 0 then
-      markerOffset = -1
-    end
-
-    local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
-    playerMarker.y = playerMarker.y + markerOffset
-
-    lg.setColor(1, 1, 1, 0.6)
-
-    lg.draw(
-      game.map.sheets.tileset_objects.image,
-      game.markerSprites.white,
-      playerMarker.x,
-      playerMarker.y
-    )
-
-    lg.setColor(1, 1, 1, 1)
-  end
-end
+-- local function drawMarkers()
+--   if game.playerTrain then
+--     local markerOffset = 0
+--     if game.started and math.sin(game.timer * 10) > 0 then
+--       markerOffset = -1
+--     end
+--
+--     local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
+--     playerMarker.y = playerMarker.y + markerOffset
+--
+--     lg.setColor(1, 1, 1, 0.6)
+--
+--     lg.draw(
+--       game.map.sheets.tileset_objects.image,
+--       game.markerSprites.white,
+--       playerMarker.x,
+--       playerMarker.y
+--     )
+--
+--     lg.setColor(1, 1, 1, 1)
+--   end
+-- end
 
 local function drawIntro()
   lg.printf("TRAIN JAM", assets.fonts.logo, 0, 0, GAME_WIDTH, "center")
@@ -271,16 +320,14 @@ local function drawOptionButton()
 end
 
 local function optionsClicked(x, y)
-  local lx, ly = game.camera:worldCoords(x, y)
-
   local w = assets.fonts.tiny:getWidth("OPTIONS") + 8
   local h = assets.fonts.tiny:getHeight() + 4
 
-  return lx > 0 and lx < w and ly > 0 and ly < h
+  return x > 0 and x < w and y > 0 and y < h
 end
 
 function game:init(levelName)
-  game = {}
+  game = { activeTurns = {} }
 
   game.camera = camera:new()
 
@@ -289,27 +336,24 @@ function game:init(levelName)
   game = level.load(game, levelName)
 
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function(pos)
+    local lx, ly = game.camera:worldCoords(pos.x, pos.y)
     if game.started then
       if game.levelName == "level0" then
         scenes.switch("game", FIRST_LEVEL)
       else
-        if optionsClicked(pos.x, pos.y) then
+        if optionsClicked(lx, ly) then
           scenes.push("menu", game.levelName, game.started)
           game.started = false
         else
-          switchNextLever(game.playerTrain)
+          switchLever(lx, ly)
         end
       end
     end
   end)
 
   game.actionListener = BUS:subscribe("keypressed_use", function()
-    if game.started then
-      if game.levelName == "level0" then
-        scenes.switch("game", FIRST_LEVEL)
-      else
-        switchNextLever(game.playerTrain)
-      end
+    if game.started and game.levelName == "level0" then
+      scenes.switch("game", FIRST_LEVEL)
     end
   end)
 
@@ -344,10 +388,11 @@ function game:update(dt)
     game.timeLeft = newTimeLeft
   end
 
-  if game.playerTrain and not game.started then
+  if game.levelName ~= "level0" and not game.started then
     scenes.push("countdown")
-    game.playerTrain.nextTurn, game.playerTrain.nextTurnDirection =
-      probe(game.playerTrain.position, game.playerTrain.direction)
+    for _, train in ipairs(game.trains) do
+      train.nextTurn, train.nextTurnDirection = probe(train.position, train.direction)
+    end
   elseif not game.started then
     game.started = true
   end
@@ -357,15 +402,13 @@ function game:update(dt)
 
     moveTrain(train, dt)
     checkCollisions(train)
-
-    if game.playerTrain and train.id ~= game.playerTrain.id then
-      maybeSwitchLever(train)
-    end
   end
 
-  game.wagonsFull = wagonsFull()
+  game.activeTurns = getActiveTurns()
 
-  if game.playerTrain and game.playerTrain.destroyed then
+  game.wagonsFull = anyWagonsFull()
+
+  if anyTrainDestroyed() then
     scenes.push("lost", "crashed", game.levelName)
   end
 
@@ -373,8 +416,8 @@ function game:update(dt)
     scenes.push("lost", "timeout", game.levelName)
   end
 
-  if game.playerTrain and isOutOfMap(game.playerTrain) then
-    if game.wagonsFull then
+  if allTrainsOutOfMap() then
+    if allWagonsFull() then
       scenes.push("won", game.levelName)
     else
       scenes.push("lost", "freight_missing", game.levelName)
@@ -397,9 +440,9 @@ function game:draw()
     r.draw()
   end
 
-  for _, l in pairs(game.levers) do
-    l.draw()
-  end
+  -- for _, l in pairs(game.levers) do
+  --   l.draw()
+  -- end
 
   for _, t in ipairs(game.trains) do
     t.draw()
@@ -415,7 +458,7 @@ function game:draw()
     end
   end
 
-  drawMarkers()
+  -- drawMarkers()
 
   if game.timeLeft then
     if game.timeLeft <= 9 then
