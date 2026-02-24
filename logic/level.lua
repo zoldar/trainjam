@@ -65,6 +65,8 @@ function _M.load(game, level)
       arrowSprites[tile.direction] = tile.sprite
     elseif tile.name == "marker" then
       markerSprites[tile.color] = tile.sprite
+    elseif tile.name == "dot" then
+      markerSprites["dot"] = tile.sprite
     end
   end
 

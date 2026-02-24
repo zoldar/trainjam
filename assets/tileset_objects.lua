@@ -141,6 +141,12 @@ return {
       }
     },
     {
+      id = 43,
+      properties = {
+        ["name"] = "dot"
+      }
+    },
+    {
       id = 46,
       properties = {
         ["direction"] = "L",

@@ -300,7 +300,12 @@ local function drawTrail(train, trainIdx)
     for _, t in ipairs(train.firstTrail) do
       lg.setColor(r, g, b, 0.5)
 
-      lg.circle("fill", t.position.x * TILE_SIZE + 8, t.position.y * TILE_SIZE + 8, 2)
+      lg.draw(
+        game.map.sheets.tileset_objects.image,
+        game.markerSprites.dot,
+        t.position.x * TILE_SIZE,
+        t.position.y * TILE_SIZE
+      )
 
       lg.setColor(1, 1, 1, 1)
     end
@@ -313,7 +318,12 @@ local function drawTrail(train, trainIdx)
 
         lg.setColor(r, g, b, opacity)
 
-        lg.circle("fill", position.x * TILE_SIZE + 8, position.y * TILE_SIZE + 8, 2)
+        lg.draw(
+          game.map.sheets.tileset_objects.image,
+          game.markerSprites.dot,
+          position.x * TILE_SIZE,
+          position.y * TILE_SIZE
+        )
 
         lg.setColor(1, 1, 1, 1)
 

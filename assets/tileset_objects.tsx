@@ -100,6 +100,11 @@
    <property name="name" value="marker"/>
   </properties>
  </tile>
+ <tile id="43">
+  <properties>
+   <property name="name" value="dot"/>
+  </properties>
+ </tile>
  <tile id="46">
   <properties>
    <property name="direction" value="L"/>
