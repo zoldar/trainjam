@@ -96,6 +96,12 @@ ORTHOGONAL = {
   right = { DIRECTIONS.up, DIRECTIONS.down },
 }
 
+TRAIL_COLORS = {
+  { 1, 1, 1 },
+  { 245 / 255, 220 / 255, 73 / 255 },
+  { 217 / 255, 53 / 255, 50 / 255 },
+}
+
 LEVELS = {
   level1 = "level2",
   level2 = "level4",

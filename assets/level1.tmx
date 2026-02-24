@@ -4,7 +4,7 @@
   <export target="level1.lua" format="lua"/>
  </editorsettings>
  <properties>
-  <property name="otherTrainsSpeed" type="float" value="0.5"/>
+  <property name="otherTrainsSpeed" type="float" value="1"/>
   <property name="playerTrainX" type="int" value="1"/>
   <property name="playerTrainY" type="int" value="10"/>
   <property name="timer" value="90"/>
@@ -145,8 +145,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,159,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,162,0,0,0,0,
+0,159,0,0,0,0,0,0,0,0,0,159,0,0,0,0,
 0,162,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,162,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

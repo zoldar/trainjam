@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "tileset_rails.tsx",
+    "activeFile": "level1.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -12,40 +12,40 @@
             "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 252.25,
-                "y": 123.75
+                "x": 256,
+                "y": 161.5
             }
         },
         "level1.tmx": {
-            "scale": 2,
+            "scale": 2.6508,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 255.75,
-                "y": 127.75
+                "x": 256.14908706805494,
+                "y": 127.88592123132639
             }
         },
         "level2.tmx": {
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 255.75,
-                "y": 127.75
+                "x": 256,
+                "y": 128
             }
         },
         "level3.tmx": {
             "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 255.75,
-                "y": 127.75
+                "x": 256,
+                "y": 128
             }
         },
         "level4.tmx": {
             "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 255.75,
-                "y": 127.75
+                "x": 256,
+                "y": 128
             }
         },
         "tileset_cart.tsx": {
@@ -57,7 +57,7 @@
             "scaleInEditor": 5.5
         },
         "tileset_rails.tsx": {
-            "scaleInDock": 3,
+            "scaleInDock": 2.0166,
             "scaleInEditor": 4
         },
         "tileset_terrains.tsx": {
@@ -88,14 +88,14 @@
     "property.type": "string",
     "recentFiles": [
         "tileset_terrains.tsx",
-        "level3.tmx",
-        "level1.tmx",
-        "level2.tmx",
-        "tileset_cart.tsx",
-        "level4.tmx",
-        "level0.tmx",
+        "tileset_rails.tsx",
         "tileset_objects.tsx",
-        "tileset_rails.tsx"
+        "level0.tmx",
+        "level4.tmx",
+        "tileset_cart.tsx",
+        "level2.tmx",
+        "level3.tmx",
+        "level1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

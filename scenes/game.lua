@@ -27,27 +27,34 @@ local function probeRail(position, direction)
   end
 end
 
-local function probe(startPosition, startDirection, fullPath)
+local function probe(startPosition, startDirection, pathLength)
+  pathLength = pathLength or 1
   local prevDirection = startDirection
   local position, direction = probeRail(startPosition, startDirection)
   local canContinue = true
+  local trail = {}
 
   if not game.rails[tostring(position)] then
-    return position, prevDirection, false
+    return position, prevDirection, trail, false
   end
 
   local positionBeforeProbe = v(position.x, position.y)
 
-  while fullPath or not game.rails[tostring(position)].willSwitch(prevDirection) do
+  while pathLength > 0 do
+    trail[#trail + 1] = { position = position, from = prevDirection, to = direction }
     prevDirection = direction
     position, direction, canContinue = probeRail(position, direction)
 
     if not canContinue or position == positionBeforeProbe then
-      return position, prevDirection, false
+      return position, prevDirection, trail, false
+    end
+
+    if game.rails[tostring(position)].willSwitch(prevDirection) then
+      pathLength = pathLength - 1
     end
   end
 
-  return position, prevDirection, true
+  return position, prevDirection, trail, true
 end
 
 local function turnWagon(wagon)
@@ -115,7 +122,9 @@ local function moveWagon(wagon, speed, dt)
   if position.x ~= wagon.position.x or position.y ~= wagon.position.y then
     wagon.position = position
     turnWagon(wagon)
-    wagon.nextTurn, wagon.nextTurnDirection = probe(wagon.position, wagon.direction)
+    wagon.nextTurn, wagon.nextTurnDirection, wagon.firstTrail =
+      probe(wagon.position, wagon.direction, 1)
+    _, _, wagon.secondTrail = probe(wagon.position, wagon.direction, 2)
     collectPickup(wagon)
   else
     wagon.position = position
@@ -275,7 +284,46 @@ local function switchLever(x, y, tilePosition)
   if rails and rails.switchable then
     local lever = game.levers[tostring(rails.leverPosition)]
     lever.state = lever.state == "switchL" and "switchR" or "switchL"
+    for _, train in ipairs(game.trains) do
+      train.nextTurn, train.nextTurnDirection, train.firstTrail =
+        probe(train.position, train.direction, 1)
+      _, _, train.secondTrail = probe(train.position, train.direction, 2)
+    end
     assets.sounds.switch:clone():play()
+  end
+end
+
+local function drawTrail(train, trainIdx)
+  local r, g, b = unpack(TRAIL_COLORS[trainIdx])
+
+  if train.firstTrail and train.speed > 0 then
+    for _, t in ipairs(train.firstTrail) do
+      lg.setColor(r, g, b, 0.5)
+
+      lg.circle("fill", t.position.x * TILE_SIZE + 8, t.position.y * TILE_SIZE + 8, 2)
+
+      lg.setColor(1, 1, 1, 1)
+    end
+
+    local opacity = 0.5
+
+    if #train.secondTrail > #train.firstTrail then
+      for idx = #train.firstTrail, #train.secondTrail do
+        local position = train.secondTrail[idx].position
+
+        lg.setColor(r, g, b, opacity)
+
+        lg.circle("fill", position.x * TILE_SIZE + 8, position.y * TILE_SIZE + 8, 2)
+
+        lg.setColor(1, 1, 1, 1)
+
+        opacity = opacity - 0.1
+
+        if opacity <= 0 then
+          break
+        end
+      end
+    end
   end
 end
 
@@ -391,7 +439,9 @@ function game:update(dt)
   if game.levelName ~= "level0" and not game.started then
     scenes.push("countdown")
     for _, train in ipairs(game.trains) do
-      train.nextTurn, train.nextTurnDirection = probe(train.position, train.direction)
+      train.nextTurn, train.nextTurnDirection, train.firstTrail =
+        probe(train.position, train.direction, 1)
+      _, _, train.secondTrail = probe(train.position, train.direction, 2)
     end
   elseif not game.started then
     game.started = true
@@ -444,7 +494,10 @@ function game:draw()
   --   l.draw()
   -- end
 
-  for _, t in ipairs(game.trains) do
+  for idx, t in ipairs(game.trains) do
+    if game.levelName ~= "level0" then
+      drawTrail(t, idx)
+    end
     t.draw()
   end
 
