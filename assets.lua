@@ -6,10 +6,8 @@ local assets = {}
 
 function assets.load()
   assets.fonts = {
-    standard = lg.newFont("assets/Kenney Pixel.ttf", 24),
-    tiny = lg.newFont("assets/Kenney Pixel.ttf", 14),
-    help = lg.newFont("assets/Kenney High.ttf", 23),
-    score = lg.newFont("assets/Kenney High.ttf", 32),
+    standard = lg.newFont("assets/PublicPixel.ttf", 8),
+    tiny = lg.newFont("assets/pixelated.ttf", 8),
     logo = lg.newFont("assets/Kenney Blocks.ttf", 56),
   }
 

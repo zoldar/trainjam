@@ -15,13 +15,13 @@ function lost:init(reason, currentLevel)
   end)
 
   if reason == "crashed" then
-    self.message = "YOU CRASHED."
+    self.message = "YOU CRASHED"
   elseif reason == "timeout" then
-    self.message = "YOU RAN OUT OF TIME."
+    self.message = "YOU RAN OUT OF TIME"
   elseif reason == "freight_missing" then
-    self.message = "YOU DID NOT COLLECT ALL FREIGHT."
+    self.message = "YOU DID NOT COLLECT ALL FREIGHT"
   else
-    self.message = "YOU LOST."
+    self.message = "YOU LOST"
   end
 
   self.camera = camera:new()
@@ -37,7 +37,7 @@ function lost:draw()
   lg.setColor(1, 1, 1, 1)
 
   lg.printf(
-    self.message .. "\nPRESS SPACE TO TRY AGAIN",
+    self.message .. "\n\nPRESS SPACE TO TRY AGAIN",
     assets.fonts.standard,
     0,
     GAME_HEIGHT / 2,
