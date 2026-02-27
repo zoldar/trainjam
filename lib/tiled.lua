@@ -1,4 +1,5 @@
 local slick = require("vendor.slick.slick")
+local lg = love.graphics
 
 local _M = {}
 
@@ -193,6 +194,69 @@ local function gridFromChunks(chunks)
   return grid
 end
 
+local function loadTile(tile, sheets)
+  local loaded = {
+    sprite = tile.sprite,
+    sheet = sheets[tile.sheetName].image,
+  }
+
+  loaded.draw = function(...)
+    lg.draw(loaded.sheet, loaded.sprite, ...)
+  end
+
+  for key, val in pairs(tile) do
+    if key ~= "sprite" and key ~= "sheetName" then
+      loaded[key] = val
+    end
+  end
+
+  return loaded
+end
+
+local function loadTileByDef(tile, def, sheets)
+  local key = def.key or "name"
+  local filter = def.filter
+  local keyFun = type(key) == "function" and key or function(t)
+    return t[key]
+  end
+  local filterFun = type(filter) == "function" and filter
+    or function(t)
+      return t.name == filter
+    end
+
+  if filterFun(tile) then
+    return def.group, keyFun(tile), loadTile(tile, sheets)
+  else
+    return nil, nil, nil
+  end
+end
+
+function _M.getSprites(sheets, assetMap)
+  local sprites = {}
+
+  for tileset, defs in pairs(assetMap) do
+    for _, tile in ipairs(sheets[tileset].tiles) do
+      for _, def in ipairs(defs) do
+        local group, key, val = loadTileByDef(tile, def, sheets)
+
+        if group then
+          if not sprites[group] then
+            sprites[group] = {}
+          end
+
+          if not sprites[group][key] then
+            sprites[group][key] = {}
+          end
+
+          sprites[group][key] = val
+        end
+      end
+    end
+  end
+
+  return sprites
+end
+
 function _M.loadMap(data)
   local sheets = {}
   local globalSheet = {}
@@ -229,9 +293,7 @@ function _M.loadMap(data)
   }
 end
 
-function _M.load(path)
-  local data = require(path)
-
+function _M.loadScene(data)
   local map = {
     bounds = {},
     spawnPoint = { x = 0, y = 0 },

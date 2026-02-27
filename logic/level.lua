@@ -1,6 +1,7 @@
-local tiled = require("lib.tiled")
-local v = require("lib.vector")
 local lg = love.graphics
+local v = require("lib.vector")
+local tiled = require("lib.tiled")
+local Train = require("logic.train")
 
 local _M = {}
 
@@ -43,6 +44,57 @@ local function getSwitchedTo(playerDirection, directions, switchDirections)
   return INVERSE_RAIL_1WAY[switchedTo]
 end
 
+local levelSpriteMap = {
+  tileset_objects = {
+    {
+      group = "arrows",
+      filter = "arrow",
+      key = "direction",
+    },
+    {
+      group = "markers",
+      filter = "marker",
+      key = "color",
+    },
+    {
+      group = "markers",
+      filter = "small_marker",
+      key = function(tile)
+        return "marker_" .. tile.direction
+      end,
+    },
+    {
+      group = "markers",
+      filter = "dot",
+    },
+    {
+      group = "levers",
+      filter = "lever",
+      key = "state",
+    },
+  },
+  tileset_cart = {
+    {
+      group = "trains",
+      filter = function(tile)
+        return tile.type and tile.state
+      end,
+      key = function(tile)
+        return tile.type .. "_" .. tile.orientation .. "_" .. tile.state
+      end,
+    },
+    {
+      group = "trains",
+      filter = function(tile)
+        return tile.type and not tile.state
+      end,
+      key = function(tile)
+        return tile.type .. "_" .. tile.orientation
+      end,
+    },
+  },
+}
+
 function _M.load(game, level)
   local map = tiled.loadMap(require("assets." .. level))
   local ground = {}
@@ -53,72 +105,10 @@ function _M.load(game, level)
   local pickups = {}
   local exitMarkers = {}
 
-  local objectSheet = map.sheets.tileset_objects.image
-  local leverSprites = {}
-  local arrowSprites = {}
-  local markerSprites = {}
+  local sprites = tiled.getSprites(map.sheets, levelSpriteMap)
 
-  for _, tile in ipairs(map.sheets.tileset_objects.tiles) do
-    if tile.name == "lever" then
-      leverSprites[tile.state] = tile.sprite
-    elseif tile.name == "arrow" then
-      arrowSprites[tile.direction] = tile.sprite
-    elseif tile.name == "marker" then
-      markerSprites[tile.color] = tile.sprite
-    elseif tile.name == "dot" then
-      markerSprites["dot"] = tile.sprite
-    end
-  end
-
-  local trainSheet = map.sheets.tileset_cart.image
-  local trainSprites = {}
-
-  for _, tile in ipairs(map.sheets.tileset_cart.tiles) do
-    if tile.state then
-      trainSprites[tile.type .. "_" .. tile.orientation .. "_" .. tile.state] = tile.sprite
-    else
-      trainSprites[tile.type .. "_" .. tile.orientation] = tile.sprite
-    end
-  end
-
-  local drawTrain = function(trainIdx)
-    return function()
-      local train = trains[trainIdx]
-      local orientation = ORIENTATION[train.direction]
-
-      local markerOffset = 0
-      if game.started and train.speed > 0 and math.sin(game.timer * 10) > 0 then
-        markerOffset = -1
-      end
-
-      if train.destroyed then
-        lg.setColor(0.5, 0.5, 0.5)
-      end
-
-      lg.draw(
-        trainSheet,
-        trainSprites["train_front_" .. orientation],
-        train.realPosition.x,
-        train.realPosition.y + markerOffset
-      )
-
-      for _, t in ipairs(train.tail) do
-        markerOffset = markerOffset == -1 and 0 or -1
-
-        local tailOrientation = ORIENTATION[t.direction]
-        lg.draw(
-          trainSheet,
-          trainSprites["train_back_" .. tailOrientation .. "_" .. t.state],
-          t.realPosition.x,
-          t.realPosition.y + markerOffset
-        )
-      end
-
-      lg.setColor(1, 1, 1)
-    end
-  end
-
-  local wagons = {}
+  local trainTiles = {}
+  local wagonTiles = {}
 
   for x, row in pairs(map.layers.trains) do
     for y, spriteId in pairs(row) do
@@ -126,62 +116,20 @@ function _M.load(game, level)
       local tile = map.byId[spriteId]
 
       if tile.type == "train_front" then
-        local idx = #trains + 1
-        trains[idx] = {
-          id = idx,
+        trainTiles[tostring(position)] = {
           position = position,
-          realPosition = position * TILE_SIZE,
-          direction = "up",
-          speed = map.props.otherTrainsSpeed * TRAIN_SPEED,
-          tail = {},
-          orientation = tile.orientation,
-          draw = drawTrain(#trains + 1),
+          data = map.byId[spriteId],
         }
       else
-        wagons[tostring(position)] = map.byId[spriteId].state
+        wagonTiles[tostring(position)] = {
+          postiion = position,
+          data = map.byId[spriteId],
+        }
       end
     end
   end
 
-  local buildTail = function(train, position, dir)
-    local tail = {}
-
-    while wagons[tostring(position)] do
-      tail[#tail + 1] = {
-        state = wagons[tostring(position)],
-        trainId = train.id,
-        position = position,
-        realPosition = position * TILE_SIZE,
-        direction = INVERSE[tostring(dir)],
-      }
-
-      position = position + dir
-    end
-
-    return tail
-  end
-
-  for _, train in ipairs(trains) do
-    local probes
-
-    if train.orientation == "horizontal" then
-      probes = { DIRECTIONS.left, DIRECTIONS.right }
-    else
-      probes = { DIRECTIONS.up, DIRECTIONS.down }
-    end
-
-    for _, dir in ipairs(probes) do
-      local position = train.position + dir
-      local nextWagon = wagons[tostring(position)]
-
-      if nextWagon then
-        train.orientation = nil
-        train.direction = INVERSE[tostring(dir)]
-        train.tail = buildTail(train, position, dir)
-        break
-      end
-    end
-  end
+  trains = Train.fromTiles(trainTiles, wagonTiles, sprites.trains)
 
   for x = 0, GRID_WIDTH - 1 do
     for y = 0, GRID_HEIGHT - 1 do
@@ -212,12 +160,7 @@ function _M.load(game, level)
         local tile = map.byId[map.layers.levers[x][y]]
 
         local draw = function()
-          lg.draw(
-            objectSheet,
-            leverSprites[levers[strPosition].state],
-            x * TILE_SIZE,
-            y * TILE_SIZE
-          )
+          sprites.levers[levers[strPosition].state].draw(x * TILE_SIZE, y * TILE_SIZE)
         end
 
         levers[strPosition] = { draw = draw, state = tile.state }
@@ -233,12 +176,8 @@ function _M.load(game, level)
           end
           if not game.pickups[strPosition].collected then
             local px, py = x * TILE_SIZE, y * TILE_SIZE
-            lg.draw(
-              map.sheets.tileset_objects.image,
-              markerSprites.yellow,
-              px,
-              py - TILE_SIZE * 0.75 + markerOffset
-            )
+            sprites.markers.yellow.draw(px, py - TILE_SIZE * 0.75 + markerOffset)
+
             lg.draw(sheet, tile.sprite, px, py)
           end
         end
@@ -344,12 +283,9 @@ function _M.load(game, level)
             end
 
             if nextTurnDirection then
-              lg.draw(
-                map.sheets.tileset_objects.image,
-                arrowSprites[getSwitchedTo(nextTurnDirection, directions.fixed, switchDirections())],
-                rx,
-                ry
-              )
+              local spriteKey =
+                getSwitchedTo(nextTurnDirection, directions.fixed, switchDirections())
+              sprites.arrows[spriteKey].draw(rx, ry)
             end
 
             lg.setColor(1, 1, 1, 1)
@@ -376,7 +312,7 @@ function _M.load(game, level)
   game.levers = levers
   game.trains = trains
   game.pickups = pickups
-  game.markerSprites = markerSprites
+  game.sprites = sprites
   game.exitMarkers = exitMarkers
   game.timeLeft = map.props.timer
 

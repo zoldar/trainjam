@@ -1,10 +1,11 @@
+local lg = love.graphics
 local assets = require("assets")
 local v = require("lib.vector")
 local camera = require("lib.camera")
 local scenes = require("lib.scenes")
 local collisions = require("lib.collisions")
 local level = require("logic.level")
-local lg = love.graphics
+local Train = require("logic.train")
 
 local game = {}
 
@@ -65,19 +66,10 @@ local function turnWagon(wagon)
 
     local exit = rail.switchDirections()[comingFrom] or rail.directions[comingFrom]
 
-    if rail.switchable and wagon.id then
-      wagon.switchTried = false
-    end
-
-    if exit and wagon.direction ~= exit then
-      wagon.direction = exit
-      wagon.realPosition = wagon.position * TILE_SIZE
-    elseif not exit then
-      local train = wagon.trainId and game.trains[wagon.trainId] or wagon
-
-      train.speed = 0
-      train.destroyed = true
-      assets.sounds.explosion:play()
+    if exit then
+      Train.turn(wagon, exit)
+    else
+      Train.destroy(wagon)
     end
   end
 end
@@ -99,7 +91,7 @@ local function roundByDirection(position, direction)
 end
 
 local function collectPickup(wagon)
-  if wagon.trainId and wagon.state == "empty" then
+  if wagon.train and wagon.state == "empty" then
     for _, d in ipairs(ORTHOGONAL[wagon.direction]) do
       local position = wagon.position + d
       local pickup = game.pickups[tostring(position)]
@@ -156,8 +148,8 @@ local function checkCollisions(train)
   eachTrainWagon(train, function(wagon)
     if not train.destroyed then
       eachWagon(function(otherWagon)
-        local wagonId = wagon.id or wagon.trainId
-        local otherWagonId = otherWagon.id or otherWagon.trainId
+        local wagonId = wagon.id or wagon.train.id
+        local otherWagonId = otherWagon.id or otherWagon.train.id
 
         if wagonId ~= otherWagonId then
           local w, h = TILE_SIZE - 2 * HITBOX_SHRINK, TILE_SIZE - 2 * HITBOX_SHRINK
@@ -298,16 +290,16 @@ local function drawTrail(train, trainIdx)
 
   if train.firstTrail and train.speed > 0 then
     for _, t in ipairs(train.firstTrail) do
-      lg.setColor(r, g, b, 0.5)
+      if not game.rails[tostring(t.position)].switchable then
+        lg.setColor(r, g, b, 0.5)
 
-      lg.draw(
-        game.map.sheets.tileset_objects.image,
-        game.markerSprites.dot,
-        t.position.x * TILE_SIZE,
-        t.position.y * TILE_SIZE
-      )
+        game.sprites.markers["marker_" .. t.to].draw(
+          t.position.x * TILE_SIZE,
+          t.position.y * TILE_SIZE
+        )
 
-      lg.setColor(1, 1, 1, 1)
+        lg.setColor(1, 1, 1, 1)
+      end
     end
 
     local opacity = 0.5
@@ -315,19 +307,20 @@ local function drawTrail(train, trainIdx)
     if #train.secondTrail > #train.firstTrail then
       for idx = #train.firstTrail, #train.secondTrail do
         local position = train.secondTrail[idx].position
+        local direction = train.secondTrail[idx].to
 
-        lg.setColor(r, g, b, opacity)
+        if not game.rails[tostring(position)].switchable then
+          lg.setColor(r, g, b, opacity)
 
-        lg.draw(
-          game.map.sheets.tileset_objects.image,
-          game.markerSprites.dot,
-          position.x * TILE_SIZE,
-          position.y * TILE_SIZE
-        )
+          game.sprites.markers["marker_" .. direction].draw(
+            position.x * TILE_SIZE,
+            position.y * TILE_SIZE
+          )
 
-        lg.setColor(1, 1, 1, 1)
+          lg.setColor(1, 1, 1, 1)
 
-        opacity = opacity - 0.1
+          opacity = opacity - 0.1
+        end
 
         if opacity <= 0 then
           break
@@ -349,12 +342,7 @@ end
 --
 --     lg.setColor(1, 1, 1, 0.6)
 --
---     lg.draw(
---       game.map.sheets.tileset_objects.image,
---       game.markerSprites.white,
---       playerMarker.x,
---       playerMarker.y
---     )
+--     game.sprites.markers.white.draw(playerMarker.x, playerMarker.y)
 --
 --     lg.setColor(1, 1, 1, 1)
 --   end
@@ -384,8 +372,42 @@ local function optionsClicked(x, y)
   return x > 0 and x < w and y > 0 and y < h
 end
 
+local function updateSlowMode(dt)
+  game.lastFocus = game.focus
+  game.focus = nil
+
+  for _, t in ipairs(game.trains) do
+    if
+      not t.slowTimeDone
+      and (not game.focus or t:nextTurnDistance() < game.focus:nextTurnDistance())
+    then
+      game.focus = t
+    end
+  end
+
+  if (game.lastFocus and game.lastFocus.id) ~= (game.focus and game.focus.id) then
+    game.slowTimer = SLOW_TIME
+  end
+
+  if
+    game.focus
+    and not game.focus.slowTimeDone
+    and #game.focus.firstTrail < 3
+    and game.slowTimer > 0
+  then
+    game.slowTimer = game.slowTimer - dt
+    game.slow = true
+  else
+    if game.focus and game.slowTimer <= 0 then
+      game.focus.slowTimeDone = true
+    end
+
+    game.slow = false
+  end
+end
+
 function game:init(levelName)
-  game = { activeTurns = {} }
+  game = { activeTurns = {}, slow = false, slowTimer = SLOW_TIME, focus = nil }
 
   game.camera = camera:new()
 
@@ -436,10 +458,15 @@ function game:init(levelName)
 end
 
 function game:update(dt)
-  game.timer = game.timer + dt
+  local moveDt = dt
+  if game.slow then
+    moveDt = SLOW_SPEED_FACTOR * dt
+  end
+
+  game.timer = game.timer + moveDt
 
   if game.timeLeft then
-    local newTimeLeft = game.timeLeft - dt
+    local newTimeLeft = game.timeLeft - moveDt
     if newTimeLeft <= 9 and math.ceil(newTimeLeft) < math.ceil(game.timeLeft) then
       assets.sounds.warning:play()
     end
@@ -460,13 +487,17 @@ function game:update(dt)
   for idx = #game.trains, 1, -1 do
     local train = game.trains[idx]
 
-    moveTrain(train, dt)
+    moveTrain(train, moveDt)
     checkCollisions(train)
   end
 
   game.activeTurns = getActiveTurns()
 
   game.wagonsFull = anyWagonsFull()
+
+  if game.levelName ~= "level0" then
+    updateSlowMode(dt)
+  end
 
   if anyTrainDestroyed() then
     scenes.push("lost", "crashed", game.levelName)
@@ -508,7 +539,7 @@ function game:draw()
     if game.levelName ~= "level0" then
       drawTrail(t, idx)
     end
-    t.draw()
+    t:draw(game.timer)
   end
 
   for _, p in pairs(game.pickups) do
@@ -521,6 +552,14 @@ function game:draw()
     end
   end
 
+  if game.slow then
+    lg.setColor(0, 0, 0, 0.3)
+    lg.rectangle("fill", 0, 0, GAME_WIDTH, GAME_HEIGHT)
+    lg.setColor(1, 1, 1, 1)
+
+    drawTrail(game.focus, 1)
+    game.focus:draw(game.timer)
+  end
   -- drawMarkers()
 
   if game.timeLeft then

@@ -82,6 +82,18 @@
    <property name="name" value="arrow"/>
   </properties>
  </tile>
+ <tile id="38">
+  <properties>
+   <property name="direction" value="down"/>
+   <property name="name" value="small_marker"/>
+  </properties>
+ </tile>
+ <tile id="39">
+  <properties>
+   <property name="direction" value="up"/>
+   <property name="name" value="small_marker"/>
+  </properties>
+ </tile>
  <tile id="40">
   <properties>
    <property name="direction" value="U"/>
@@ -115,6 +127,18 @@
   <properties>
    <property name="direction" value="R"/>
    <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="48">
+  <properties>
+   <property name="direction" value="left"/>
+   <property name="name" value="small_marker"/>
+  </properties>
+ </tile>
+ <tile id="49">
+  <properties>
+   <property name="direction" value="right"/>
+   <property name="name" value="small_marker"/>
   </properties>
  </tile>
 </tileset>

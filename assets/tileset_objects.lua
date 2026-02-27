@@ -120,6 +120,20 @@ return {
       }
     },
     {
+      id = 38,
+      properties = {
+        ["direction"] = "down",
+        ["name"] = "small_marker"
+      }
+    },
+    {
+      id = 39,
+      properties = {
+        ["direction"] = "up",
+        ["name"] = "small_marker"
+      }
+    },
+    {
       id = 40,
       properties = {
         ["direction"] = "U",
@@ -158,6 +172,20 @@ return {
       properties = {
         ["direction"] = "R",
         ["name"] = "arrow"
+      }
+    },
+    {
+      id = 48,
+      properties = {
+        ["direction"] = "left",
+        ["name"] = "small_marker"
+      }
+    },
+    {
+      id = 49,
+      properties = {
+        ["direction"] = "right",
+        ["name"] = "small_marker"
       }
     }
   }
