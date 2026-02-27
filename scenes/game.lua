@@ -58,6 +58,36 @@ local function probe(startPosition, startDirection, pathLength)
   return position, prevDirection, trail, true
 end
 
+local function updateFocus()
+  local focus
+
+  for _, t in ipairs(game.trains) do
+    local rail = game.rails[tostring(t.nextTurn or "none")]
+    local nextSwitchable = rail and rail.switchable
+
+    if
+      nextSwitchable
+      and not t.slowTimerDone
+      and (not focus or t:nextTurnDistance() < focus:nextTurnDistance())
+    then
+      focus = t
+    end
+  end
+
+  game.focus = focus
+end
+
+local function updateNextTurn(wagon)
+  local currentNextTurn = wagon.nextTurn
+  wagon.nextTurn, wagon.nextTurnDirection, wagon.firstTrail =
+    probe(wagon.position, wagon.direction, 1)
+  _, _, wagon.secondTrail = probe(wagon.position, wagon.direction, 2)
+
+  if currentNextTurn ~= wagon.nextTurn and wagon.slowTimerDone then
+    wagon.slowTimerDone = false
+  end
+end
+
 local function turnWagon(wagon)
   local rail = game.rails[tostring(wagon.position)]
 
@@ -114,9 +144,7 @@ local function moveWagon(wagon, speed, dt)
   if position.x ~= wagon.position.x or position.y ~= wagon.position.y then
     wagon.position = position
     turnWagon(wagon)
-    wagon.nextTurn, wagon.nextTurnDirection, wagon.firstTrail =
-      probe(wagon.position, wagon.direction, 1)
-    _, _, wagon.secondTrail = probe(wagon.position, wagon.direction, 2)
+    updateNextTurn(wagon)
     collectPickup(wagon)
   else
     wagon.position = position
@@ -277,9 +305,7 @@ local function switchLever(x, y, tilePosition)
     local lever = game.levers[tostring(rails.leverPosition)]
     lever.state = lever.state == "switchL" and "switchR" or "switchL"
     for _, train in ipairs(game.trains) do
-      train.nextTurn, train.nextTurnDirection, train.firstTrail =
-        probe(train.position, train.direction, 1)
-      _, _, train.secondTrail = probe(train.position, train.direction, 2)
+      updateNextTurn(train)
     end
     assets.sounds.switch:clone():play()
   end
@@ -373,33 +399,15 @@ local function optionsClicked(x, y)
 end
 
 local function updateSlowMode(dt)
-  game.lastFocus = game.focus
-  game.focus = nil
+  updateFocus()
 
-  for _, t in ipairs(game.trains) do
-    if
-      not t.slowTimeDone
-      and (not game.focus or t:nextTurnDistance() < game.focus:nextTurnDistance())
-    then
-      game.focus = t
-    end
-  end
-
-  if (game.lastFocus and game.lastFocus.id) ~= (game.focus and game.focus.id) then
-    game.slowTimer = SLOW_TIME
-  end
-
-  if
-    game.focus
-    and not game.focus.slowTimeDone
-    and #game.focus.firstTrail < 3
-    and game.slowTimer > 0
-  then
+  if game.focus and #game.focus.firstTrail < 2 and game.slowTimer > 0 then
     game.slowTimer = game.slowTimer - dt
     game.slow = true
   else
-    if game.focus and game.slowTimer <= 0 then
-      game.focus.slowTimeDone = true
+    if game.slow then
+      game.focus.slowTimerDone = true
+      game.slowTimer = SLOW_TIME
     end
 
     game.slow = false
@@ -455,6 +463,10 @@ function game:init(levelName)
 
   game.timer = 0
   game.started = false
+
+  for _, train in ipairs(game.trains) do
+    updateNextTurn(train)
+  end
 end
 
 function game:update(dt)
@@ -476,9 +488,7 @@ function game:update(dt)
   if game.levelName ~= "level0" and not game.started then
     scenes.push("countdown")
     for _, train in ipairs(game.trains) do
-      train.nextTurn, train.nextTurnDirection, train.firstTrail =
-        probe(train.position, train.direction, 1)
-      _, _, train.secondTrail = probe(train.position, train.direction, 2)
+      updateNextTurn(train)
     end
   elseif not game.started then
     game.started = true

@@ -74,7 +74,7 @@ end
 
 function Train:nextTurnDistance()
   if self.nextTurn then
-    return self.position:distance(self.nextTurn * TILE_SIZE)
+    return (self.position * TILE_SIZE):distance(self.nextTurn * TILE_SIZE)
   else
     return 9999
   end
