@@ -391,6 +391,51 @@ local function drawOptionButton()
   lg.printf("OPTIONS", assets.fonts.tiny, 4, 2, GAME_WIDTH, "left")
 end
 
+local function buttonBox(name)
+  local width, height = BUTTONS_BOTTOM_WIDTH, BUTTONS_BOTTOM_HEIGHT
+
+  if name == "switch" then
+    return {
+      x = GAME_WIDTH / 2 - width - BUTTONS_BOTTOM_OFFSET,
+      y = GAME_HEIGHT - height - BUTTONS_BOTTOM_MARGIN,
+      width = width,
+      height = height,
+    }
+  elseif name == "resume" then
+    return {
+      x = GAME_WIDTH / 2 + BUTTONS_BOTTOM_OFFSET,
+      y = GAME_HEIGHT - height - BUTTONS_BOTTOM_MARGIN,
+      width = width,
+      height = height,
+    }
+  end
+end
+
+local function drawBottomButtons()
+  local switchBox = buttonBox("switch")
+  local resumeBox = buttonBox("resume")
+
+  lg.draw(
+    assets.buttons["switch_" .. game.buttons.switch].sheet,
+    assets.buttons["switch_" .. game.buttons.switch].sprite,
+    switchBox.x,
+    switchBox.y
+  )
+
+  lg.draw(
+    assets.buttons["resume_" .. game.buttons.resume].sheet,
+    assets.buttons["resume_" .. game.buttons.resume].sprite,
+    resumeBox.x,
+    resumeBox.y
+  )
+end
+
+local function buttonClicked(name, x, y)
+  local box = buttonBox(name)
+
+  return x > box.x and x < box.x + box.width and y > box.y and y < box.y + box.height
+end
+
 local function optionsClicked(x, y)
   local w = assets.fonts.tiny:getWidth("OPTIONS") + 8
   local h = assets.fonts.tiny:getHeight() + 4
@@ -415,13 +460,34 @@ local function updateSlowMode(dt)
 end
 
 function game:init(levelName)
-  game = { activeTurns = {}, slow = false, slowTimer = SLOW_TIME, focus = nil }
+  game = {
+    activeTurns = {},
+    slow = false,
+    slowTimer = SLOW_TIME,
+    focus = nil,
+    buttons = {
+      switch = "normal",
+      resume = "normal",
+    },
+  }
 
   game.camera = camera:new()
 
   levelName = levelName or "level0"
 
   game = level.load(game, levelName)
+
+  game.mouseListener = BUS:subscribe("mousepressed_primary", function(pos)
+    local lx, ly = game.camera:worldCoords(pos.x, pos.y)
+
+    for _, button in ipairs({ "switch", "resume" }) do
+      if buttonClicked(button, lx, ly) then
+        game.buttons[button] = "pressed"
+      else
+        game.buttons[button] = "normal"
+      end
+    end
+  end)
 
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function(pos)
     local lx, ly = game.camera:worldCoords(pos.x, pos.y)
@@ -432,8 +498,18 @@ function game:init(levelName)
         if optionsClicked(lx, ly) then
           scenes.push("menu", game.levelName, game.started)
           game.started = false
-        else
-          switchLever(lx, ly)
+        elseif game.slow then
+          game.buttons.switch = "normal"
+          game.buttons.resume = "normal"
+
+          if buttonClicked("switch", lx, ly) then
+            local position = game.activeTurns[1].position
+            switchLever(position.x, position.y, true)
+          elseif buttonClicked("resume", lx, ly) then
+            game.slowTimer = 0
+          else
+            switchLever(lx, ly)
+          end
         end
       end
     end
@@ -596,6 +672,9 @@ function game:draw()
     drawIntro()
   else
     drawOptionButton()
+    if game.slow then
+      drawBottomButtons()
+    end
   end
 
   game.camera:detach()

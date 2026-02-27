@@ -8,7 +8,7 @@ local inspect = require("vendor.inspect")
 require("logic.constants")
 
 INSPECT = function(...)
-  print(inspect({...}))
+  print(inspect({ ... }))
   return ...
 end
 
@@ -31,6 +31,11 @@ function love.keyreleased(key)
   if keys.toAction(key) then
     BUS:publish("keyreleased_" .. keys.toAction(key))
   end
+end
+
+function love.mousepressed(x, y, button) 
+  local buttonName = button == 1 and "primary" or "secondary"
+  BUS:publish("mousepressed_" .. buttonName, { x = x, y = y })
 end
 
 function love.mousereleased(x, y, button)

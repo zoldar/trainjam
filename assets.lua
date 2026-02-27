@@ -11,8 +11,25 @@ function assets.load()
     logo = lg.newFont("assets/Kenney Blocks.ttf", 56),
   }
 
-  assets.levels = {
-    -- level1 = { map = tiled.load("assets.level1") },
+  local buttonsSheet = lg.newImage("assets/buttons.png")
+
+  assets.buttons = {
+    switch_normal = {
+      sprite = lg.newQuad(1, 1, 52, 25, buttonsSheet),
+      sheet = buttonsSheet,
+    },
+    switch_pressed = {
+      sprite = lg.newQuad(1, 29, 52, 25, buttonsSheet),
+      sheet = buttonsSheet,
+    },
+    resume_normal = {
+      sprite = lg.newQuad(54, 1, 52, 25, buttonsSheet),
+      sheet = buttonsSheet,
+    },
+    resume_pressed = {
+      sprite = lg.newQuad(54, 29, 52, 25, buttonsSheet),
+      sheet = buttonsSheet,
+    },
   }
 
   assets.sounds = {
