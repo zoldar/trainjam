@@ -135,7 +135,6 @@ function _M.load(game, level)
     for y = 0, GRID_HEIGHT - 1 do
       local position = v(x, y)
       local strPosition = tostring(position)
-
       if map.layers.ground[x] and map.layers.ground[x][y] then
         local tile = map.byId[map.layers.ground[x][y]]
         local sheet = map.sheets[tile.sheetName].image
@@ -264,12 +263,16 @@ function _M.load(game, level)
         end
 
         local draw = function()
-          local lever = leverState()
           local rx, ry = x * TILE_SIZE, y * TILE_SIZE
 
           lg.draw(sheet, tile.sprite, rx, ry)
+        end
+
+        local drawArrow = function()
+          local lever = leverState()
 
           if lever then
+            local rx, ry = x * TILE_SIZE, y * TILE_SIZE
             local nextTurnDirection
 
             for _, turn in ipairs(game.activeTurns) do
@@ -294,6 +297,7 @@ function _M.load(game, level)
 
         rails[strPosition] = {
           draw = draw,
+          drawArrow = drawArrow,
           directions = directions.fixed,
           switchDirections = switchDirections,
           switchable = tile.switch,

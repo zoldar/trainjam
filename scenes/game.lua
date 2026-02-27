@@ -200,7 +200,7 @@ local function getActiveTurns()
   local turns = {}
 
   for _, train in ipairs(game.trains) do
-    if train.nextTurn then
+    if train.nextTurn and game.focus and train.id == game.focus.id then
       local rails = game.rails[tostring(train.nextTurn)]
       if rails and rails.switchable then
         turns[#turns + 1] = { position = train.nextTurn, direction = train.nextTurnDirection }
@@ -546,7 +546,7 @@ function game:draw()
   -- end
 
   for idx, t in ipairs(game.trains) do
-    if game.levelName ~= "level0" then
+    if game.levelName ~= "level0" and game.focus and game.focus.id == t.id then
       drawTrail(t, idx)
     end
     t:draw(game.timer)
@@ -567,7 +567,12 @@ function game:draw()
     lg.rectangle("fill", 0, 0, GAME_WIDTH, GAME_HEIGHT)
     lg.setColor(1, 1, 1, 1)
 
+    for _, r in pairs(game.rails) do
+      r.drawArrow()
+    end
+
     drawTrail(game.focus, 1)
+
     game.focus:draw(game.timer)
   end
   -- drawMarkers()
