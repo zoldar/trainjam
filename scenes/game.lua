@@ -311,68 +311,27 @@ local function switchLever(x, y, tilePosition)
   end
 end
 
-local function drawTrail(train, trainIdx)
-  local r, g, b = unpack(TRAIL_COLORS[trainIdx])
+local function drawTrail(train)
+  local r, g, b = unpack(TRAIL_COLORS[1])
 
-  if train.firstTrail and train.speed > 0 then
-    for _, t in ipairs(train.firstTrail) do
-      if not game.rails[tostring(t.position)].switchable then
+  if train.secondTrail and train.speed > 0 then
+    for _, t in ipairs(train.secondTrail) do
+      if not game.rails[tostring(t.position)].willSwitch(t.from) then
+        local offset = v(0, 0)
+        if math.sin(game.realTimer * 10) > 0 then
+          offset = DIRECTIONS[t.to] * TILE_SIZE / 2
+        end
+        local position = t.position * TILE_SIZE + offset
+
         lg.setColor(r, g, b, 0.5)
 
-        game.sprites.markers["marker_" .. t.to].draw(
-          t.position.x * TILE_SIZE,
-          t.position.y * TILE_SIZE
-        )
+        game.sprites.markers["marker_" .. t.to].draw(position.x, position.y)
 
         lg.setColor(1, 1, 1, 1)
       end
     end
-
-    local opacity = 0.5
-
-    if #train.secondTrail > #train.firstTrail then
-      for idx = #train.firstTrail, #train.secondTrail do
-        local position = train.secondTrail[idx].position
-        local direction = train.secondTrail[idx].to
-
-        if not game.rails[tostring(position)].switchable then
-          lg.setColor(r, g, b, opacity)
-
-          game.sprites.markers["marker_" .. direction].draw(
-            position.x * TILE_SIZE,
-            position.y * TILE_SIZE
-          )
-
-          lg.setColor(1, 1, 1, 1)
-
-          opacity = opacity - 0.1
-        end
-
-        if opacity <= 0 then
-          break
-        end
-      end
-    end
   end
 end
-
--- local function drawMarkers()
---   if game.playerTrain then
---     local markerOffset = 0
---     if game.started and math.sin(game.timer * 10) > 0 then
---       markerOffset = -1
---     end
---
---     local playerMarker = game.playerTrain.realPosition + DIRECTIONS.up * TILE_SIZE
---     playerMarker.y = playerMarker.y + markerOffset
---
---     lg.setColor(1, 1, 1, 0.6)
---
---     game.sprites.markers.white.draw(playerMarker.x, playerMarker.y)
---
---     lg.setColor(1, 1, 1, 1)
---   end
--- end
 
 local function drawIntro()
   lg.printf("TRAIN JAM", assets.fonts.logo, 0, 0, GAME_WIDTH, "center")
@@ -538,6 +497,7 @@ function game:init(levelName)
   end)
 
   game.timer = 0
+  game.realTimer = 0
   game.started = false
 
   for _, train in ipairs(game.trains) do
@@ -552,6 +512,7 @@ function game:update(dt)
   end
 
   game.timer = game.timer + moveDt
+  game.realTimer = game.realTimer + dt
 
   if game.timeLeft then
     local newTimeLeft = game.timeLeft - moveDt
@@ -617,14 +578,7 @@ function game:draw()
     r.draw()
   end
 
-  -- for _, l in pairs(game.levers) do
-  --   l.draw()
-  -- end
-
-  for idx, t in ipairs(game.trains) do
-    if game.levelName ~= "level0" and game.focus and game.focus.id == t.id then
-      drawTrail(t, idx)
-    end
+  for _, t in ipairs(game.trains) do
     t:draw(game.timer)
   end
 
@@ -647,11 +601,10 @@ function game:draw()
       r.drawArrow()
     end
 
-    drawTrail(game.focus, 1)
+    drawTrail(game.focus)
 
     game.focus:draw(game.timer)
   end
-  -- drawMarkers()
 
   if game.timeLeft then
     if game.timeLeft <= 9 then

@@ -190,7 +190,7 @@ function _M.load(game, level)
         local draw = function()
           local markerOffset = 0
           local mx, my = x * TILE_SIZE, y * TILE_SIZE
-          if game.started and math.sin(game.timer * 10) > 0 then
+          if game.started and math.sin(game.realTimer * 10) > 0 then
             markerOffset = -1
           end
 
@@ -281,7 +281,7 @@ function _M.load(game, level)
               end
             end
 
-            if game.started and math.sin(game.timer * 20) > 0 then
+            if game.started and math.sin(game.realTimer * 20) > 0 then
               lg.setColor(1, 1, 1, 0.7)
             end
 
