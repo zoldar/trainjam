@@ -387,6 +387,20 @@ local function drawBottomButtons()
     resumeBox.x,
     resumeBox.y
   )
+
+  if game.slowTimer > 0 then
+    lg.setColor(0, 0, 0, 0.2)
+
+    lg.rectangle(
+      "fill",
+      resumeBox.x,
+      resumeBox.y,
+      ((SLOW_TIME - game.slowTimer) / SLOW_TIME) * resumeBox.width,
+      resumeBox.height
+    )
+
+    lg.setColor(1, 1, 1, 1)
+  end
 end
 
 local function buttonClicked(name, x, y)
