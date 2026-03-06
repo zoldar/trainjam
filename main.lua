@@ -15,7 +15,13 @@ end
 BUS = Bus:new()
 
 love.graphics.setDefaultFilter("nearest", "nearest")
-push:setupScreen(GAME_WIDTH, GAME_HEIGHT, 4 * GAME_WIDTH, 4 * GAME_HEIGHT, { fullscreen = false })
+push:setupScreen(
+  GAME_WIDTH,
+  GAME_HEIGHT,
+  4 * GAME_WIDTH,
+  4 * GAME_HEIGHT,
+  { fullscreen = false, pixelperfect = true, resizable = true }
+)
 
 function love.load()
   keys.configure(BINDINGS)
@@ -35,7 +41,7 @@ function love.keyreleased(key)
   end
 end
 
-function love.mousepressed(x, y, button) 
+function love.mousepressed(x, y, button)
   local buttonName = button == 1 and "primary" or "secondary"
   BUS:publish("mousepressed_" .. buttonName, { x = x, y = y })
 end
