@@ -1,4 +1,4 @@
-local screen = require("lib.screen")
+local push = require("vendor.push.push")
 local assets = require("assets")
 local Bus = require("lib.bus")
 local scenes = require("lib.scenes")
@@ -14,8 +14,10 @@ end
 
 BUS = Bus:new()
 
+love.graphics.setDefaultFilter("nearest", "nearest")
+push:setupScreen(GAME_WIDTH, GAME_HEIGHT, 4 * GAME_WIDTH, 4 * GAME_HEIGHT, { fullscreen = false })
+
 function love.load()
-  screen.load(GAME_WIDTH, GAME_HEIGHT)
   keys.configure(BINDINGS)
   assets.load()
   scenes.init("scenes/", "game")
@@ -44,7 +46,7 @@ function love.mousereleased(x, y, button)
 end
 
 function love.resize(w, h)
-  screen.resize(w, h)
+  return push:resize(w, h)
 end
 
 function love.update(dt)
@@ -52,5 +54,7 @@ function love.update(dt)
 end
 
 function love.draw()
+  push:start()
   scenes.draw()
+  push:finish()
 end

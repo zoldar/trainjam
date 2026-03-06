@@ -1,7 +1,7 @@
 local lg = love.graphics
 local assets = require("assets")
 local v = require("lib.vector")
-local camera = require("lib.camera")
+local push = require("vendor.push.push")
 local scenes = require("lib.scenes")
 local collisions = require("lib.collisions")
 local level = require("logic.level")
@@ -451,14 +451,12 @@ function game:init(levelName)
     },
   }
 
-  game.camera = camera:new()
-
   levelName = levelName or "level0"
 
   game = level.load(game, levelName)
 
   game.mouseListener = BUS:subscribe("mousepressed_primary", function(pos)
-    local lx, ly = game.camera:worldCoords(pos.x, pos.y)
+    local lx, ly = push:toGame(pos.x, pos.y)
 
     for _, button in ipairs({ "switch", "resume" }) do
       if buttonClicked(button, lx, ly) then
@@ -470,7 +468,7 @@ function game:init(levelName)
   end)
 
   game.mouseListener = BUS:subscribe("mouseclicked_primary", function(pos)
-    local lx, ly = game.camera:worldCoords(pos.x, pos.y)
+    local lx, ly = push:toGame(pos.x, pos.y)
     if game.started then
       if game.levelName == "level0" then
         scenes.switch("game", FIRST_LEVEL)
@@ -585,8 +583,6 @@ function game:update(dt)
 end
 
 function game:draw()
-  game.camera:attach()
-
   for _, g in pairs(game.ground) do
     g.draw()
   end
@@ -650,8 +646,6 @@ function game:draw()
       drawBottomButtons()
     end
   end
-
-  game.camera:detach()
 end
 
 function game:close()

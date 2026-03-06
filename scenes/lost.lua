@@ -1,7 +1,6 @@
 local lg = love.graphics
 local assets = require("assets")
 local scenes = require("lib.scenes")
-local camera = require("lib.camera")
 
 local lost = {}
 
@@ -23,13 +22,9 @@ function lost:init(reason, currentLevel)
   else
     self.message = "YOU LOST"
   end
-
-  self.camera = camera:new()
 end
 
 function lost:draw()
-  self.camera:attach()
-
   lg.setColor(0, 0, 0, 0.4)
 
   lg.rectangle("fill", 0, 0, GAME_WIDTH, GAME_HEIGHT)
@@ -44,8 +39,6 @@ function lost:draw()
     GAME_WIDTH,
     "center"
   )
-
-  self.camera:detach()
 end
 
 function lost:close()

@@ -1,7 +1,6 @@
 local lg = love.graphics
 local assets = require("assets")
 local scenes = require("lib.scenes")
-local camera = require("lib.camera")
 
 local scene = {}
 
@@ -10,7 +9,6 @@ local function toDisplay(countdown)
 end
 
 function scene:init()
-  self.camera = camera:new()
   self.countdown = 3
 
   assets.sounds.blip1:play()
@@ -36,8 +34,6 @@ function scene:update(dt)
 end
 
 function scene:draw()
-  self.camera:attach()
-
   lg.setColor(0, 0, 0, 0.2)
 
   lg.rectangle("fill", 0, 0, GAME_WIDTH, GAME_HEIGHT)
@@ -54,8 +50,6 @@ function scene:draw()
     GAME_WIDTH,
     "center"
   )
-
-  self.camera:detach()
 end
 
 return scene

@@ -4,7 +4,7 @@ function love.conf(t)
   t.window.depth = 16
   t.window.width = 1280
   t.window.height = 960
-  t.window.resizable = false
+  t.window.resizable = true
   t.window.msaa = 0
   t.modules.physics = false
   t.modules.joystick = false

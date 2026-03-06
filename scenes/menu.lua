@@ -1,10 +1,10 @@
 local lg = love.graphics
 local assets = require("assets")
 local scenes = require("lib.scenes")
-local camera = require("lib.camera")
 local Inky = require("vendor.inky")
 local Button = require("lib.button")
 local v = require("lib.vector")
+local push = require("vendor.push.push")
 
 local menu
 
@@ -51,8 +51,6 @@ function menu:init(level, gameStarted)
     self.items[#self.items + 1] = Button(self.scene, entry.name, assets.fonts.standard, entry.cb)
   end
 
-  self.camera = camera:new()
-
   menu.mouseListener = BUS:subscribe("mouseclicked_primary", function()
     self.pointer:raise("release")
   end)
@@ -60,13 +58,11 @@ end
 
 function menu:update()
   local mx, my = love.mouse.getX(), love.mouse.getY()
-  local lx, ly = self.camera:worldCoords(mx, my)
+  local lx, ly = push:toGame(mx, my)
   self.pointer:setPosition(lx, ly)
 end
 
 function menu:draw()
-  self.camera:attach()
-
   lg.setColor(0, 0, 0, 0.8)
 
   lg.rectangle("fill", 0, 0, GAME_WIDTH, GAME_HEIGHT)
@@ -87,8 +83,6 @@ function menu:draw()
     button:render(position.x, position.y, BUTTON_WIDTH, BUTTON_HEIGHT)
   end
   self.scene:finishFrame()
-
-  self.camera:detach()
 end
 
 function menu:close()
