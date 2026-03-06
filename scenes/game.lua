@@ -336,14 +336,21 @@ end
 local function drawIntro()
   lg.printf("TRAIN JAM", assets.fonts.logo, 0, 0, GAME_WIDTH, "center")
 
-  lg.printf(
-    "PRESS SPACE TO CONTINUE",
-    assets.fonts.standard,
-    0,
-    GAME_HEIGHT - assets.fonts.standard:getHeight() - 30,
-    GAME_WIDTH,
-    "center"
-  )
+  local show = false
+  if math.sin(game.realTimer * 10) > 0 then
+    show = true
+  end
+
+  if show then
+    lg.printf(
+      "CLICK TO CONTINUE",
+      assets.fonts.standard,
+      0,
+      GAME_HEIGHT - assets.fonts.standard:getHeight() - 30,
+      GAME_WIDTH,
+      "center"
+    )
+  end
 end
 
 local function drawOptionButton()
