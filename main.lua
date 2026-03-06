@@ -23,44 +23,60 @@ push:setupScreen(
   { fullscreen = false, pixelperfect = true, resizable = true }
 )
 
-function love.load()
+local function load()
   keys.configure(BINDINGS)
   assets.load()
   scenes.init("scenes/", "game")
 end
 
-function love.keypressed(key)
+love.load = load
+
+local function keypressed(key)
   if keys.toAction(key) then
     BUS:publish("keypressed_" .. keys.toAction(key))
   end
 end
 
-function love.keyreleased(key)
+love.keypressed = keypressed
+
+local function keyreleased(key)
   if keys.toAction(key) then
     BUS:publish("keyreleased_" .. keys.toAction(key))
   end
 end
 
-function love.mousepressed(x, y, button)
+love.keyreleased = keyreleased
+
+local function mousepressed(x, y, button)
   local buttonName = button == 1 and "primary" or "secondary"
   BUS:publish("mousepressed_" .. buttonName, { x = x, y = y })
 end
 
-function love.mousereleased(x, y, button)
+love.mousepressed = mousepressed
+
+local function mousereleased(x, y, button)
   local buttonName = button == 1 and "primary" or "secondary"
   BUS:publish("mouseclicked_" .. buttonName, { x = x, y = y })
 end
 
-function love.resize(w, h)
+love.mousereleased = mousereleased
+
+local function resize(w, h)
   return push:resize(w, h)
 end
 
-function love.update(dt)
+love.resize = resize
+
+local function update(dt)
   scenes.update(dt)
 end
 
-function love.draw()
+love.update = update
+
+local function draw()
   push:start()
   scenes.draw()
   push:finish()
 end
+
+love.draw = draw

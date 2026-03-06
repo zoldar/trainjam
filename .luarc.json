@@ -1,7 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
   "diagnostics": {
-    "disable": ["need-check-nil"],
+    "disable": ["need-check-nil", "duplicate-doc-field"],
+    "libraryFiles": "Disable",
     "unusedLocalExclude": ["_*"]
   },
   "workspace": {
