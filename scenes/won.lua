@@ -27,7 +27,7 @@ function won:draw()
   lg.setColor(1, 1, 1, 1)
 
   lg.printf(
-    "GREAT JOB!\n\nPRESS SPACE TO CONTINUE",
+    "GREAT JOB!\n\nCLICK TO CONTINUE",
     assets.fonts.standard,
     0,
     GAME_HEIGHT / 2,

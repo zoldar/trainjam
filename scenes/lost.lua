@@ -37,7 +37,7 @@ function lost:draw()
   lg.setColor(1, 1, 1, 1)
 
   lg.printf(
-    self.message .. "\n\nPRESS SPACE TO TRY AGAIN",
+    self.message .. "\n\nCLICK TO TRY AGAIN",
     assets.fonts.standard,
     0,
     GAME_HEIGHT / 2,
