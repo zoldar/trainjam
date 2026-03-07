@@ -1,6 +1,7 @@
 local v = require("lib.vector")
 
 GAME_WIDTH, GAME_HEIGHT = 320, 240
+WINDOW_SCALE_FACTOR = 2
 
 BUTTON_WIDTH = 140
 BUTTON_HEIGHT = 30

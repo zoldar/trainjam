@@ -18,8 +18,8 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 push:setupScreen(
   GAME_WIDTH,
   GAME_HEIGHT,
-  4 * GAME_WIDTH,
-  4 * GAME_HEIGHT,
+  WINDOW_SCALE_FACTOR * GAME_WIDTH,
+  WINDOW_SCALE_FACTOR * GAME_HEIGHT,
   { fullscreen = false, pixelperfect = true, resizable = true }
 )
 
