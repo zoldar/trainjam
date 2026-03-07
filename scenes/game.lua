@@ -83,7 +83,7 @@ local function updateNextTurn(wagon)
     probe(wagon.position, wagon.direction, 1)
   _, _, wagon.secondTrail = probe(wagon.position, wagon.direction, 2)
 
-  if currentNextTurn ~= wagon.nextTurn and wagon.slowTimerDone then
+  if #wagon.firstTrail > 1 then
     wagon.slowTimerDone = false
   end
 end
@@ -424,8 +424,6 @@ local function optionsClicked(x, y)
 end
 
 local function updateSlowMode(dt)
-  updateFocus()
-
   if game.focus and #game.focus.firstTrail < 2 and game.slowTimer > 0 then
     game.slowTimer = game.slowTimer - dt
     game.slow = true
@@ -436,6 +434,8 @@ local function updateSlowMode(dt)
     end
 
     game.slow = false
+
+    updateFocus()
   end
 end
 
