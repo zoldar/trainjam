@@ -51,6 +51,8 @@ function Bus:publish(event, data)
   for _, callback in pairs(self.subscriptions[event] or {}) do
     if callback and callback ~= "unsubscribed" then
       callback(data)
+    else
+      self.subscriptions[event][callback] = nil
     end
   end
 end
