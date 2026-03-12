@@ -12,8 +12,6 @@ INSPECT = function(...)
   return ...
 end
 
-BUS = Bus:new()
-
 love.graphics.setDefaultFilter("nearest", "nearest")
 push:setupScreen(
   GAME_WIDTH,
