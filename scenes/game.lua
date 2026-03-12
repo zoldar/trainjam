@@ -553,6 +553,10 @@ function game:update(dt)
     game.started = true
   end
 
+  for _, o in pairs(game.objects) do
+    o.update(dt)
+  end
+
   for idx = #game.trains, 1, -1 do
     local train = game.trains[idx]
 

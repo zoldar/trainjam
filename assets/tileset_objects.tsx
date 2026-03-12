@@ -16,6 +16,17 @@
    <property name="state" value="switchR"/>
   </properties>
  </tile>
+ <tile id="9">
+  <properties>
+   <property name="frameTime" type="float" value="0.3"/>
+   <property name="nextFrame" type="int" value="19"/>
+  </properties>
+ </tile>
+ <tile id="13">
+  <properties>
+   <property name="glow" type="bool" value="true"/>
+  </properties>
+ </tile>
  <tile id="16">
   <properties>
    <property name="direction" value="LU"/>
@@ -32,6 +43,12 @@
   <properties>
    <property name="direction" value="UD"/>
    <property name="name" value="arrow"/>
+  </properties>
+ </tile>
+ <tile id="19">
+  <properties>
+   <property name="frameTime" type="float" value="0.3"/>
+   <property name="nextFrame" type="int" value="9"/>
   </properties>
  </tile>
  <tile id="26">

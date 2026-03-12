@@ -20,32 +20,32 @@
             "scale": 2.6508,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 300.4753282028067,
-                "y": 184.66123434434886
+                "x": 256.14908706805494,
+                "y": 127.8859212313264
             }
         },
         "level2.tmx": {
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 255.75,
-                "y": 127.75
+                "x": 256,
+                "y": 128
             }
         },
         "level3.tmx": {
             "scale": 3,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 160.16666666666663,
-                "y": 79.49999999999997
+                "x": 256,
+                "y": 128
             }
         },
         "level4.tmx": {
             "scale": 4,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 170.375,
-                "y": 129.375
+                "x": 256,
+                "y": 128
             }
         },
         "tileset_cart.tsx": {
@@ -65,8 +65,8 @@
             "scaleInEditor": 5.5
         }
     },
-    "last.exportedFilePath": "/Users/zoldar/Work/personal/love/jams/trainjam/assets",
-    "last.imagePath": "/Users/zoldar/Work/personal/love/jams/trainjam/assets/caves-rails-tileset-1.2",
+    "last.exportedFilePath": "/home/zoldar/Work/personal/love/jams/trainjam/assets",
+    "last.imagePath": "/home/zoldar/Work/personal/love/jams/trainjam/assets/caves-rails-tileset-1.2",
     "lastUsedTilesetExportFilter": "Lua files (*.lua)",
     "map.fixedSize": false,
     "map.lastUsedExportFilter": "Lua files (*.lua)",
@@ -85,7 +85,7 @@
         "level3.tmx"
     ],
     "project": "levels.tiled-project",
-    "property.type": "string",
+    "property.type": "float",
     "recentFiles": [
         "level3.tmx",
         "level4.tmx",

@@ -43,6 +43,19 @@ return {
       }
     },
     {
+      id = 9,
+      properties = {
+        ["frameTime"] = 0.3,
+        ["nextFrame"] = 19
+      }
+    },
+    {
+      id = 13,
+      properties = {
+        ["glow"] = true
+      }
+    },
+    {
       id = 16,
       properties = {
         ["direction"] = "LU",
@@ -61,6 +74,13 @@ return {
       properties = {
         ["direction"] = "UD",
         ["name"] = "arrow"
+      }
+    },
+    {
+      id = 19,
+      properties = {
+        ["frameTime"] = 0.3,
+        ["nextFrame"] = 9
       }
     },
     {

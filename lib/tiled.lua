@@ -270,6 +270,7 @@ function _M.loadMap(data)
   for _, tileset in ipairs(data.tilesets) do
     local sheet = loadSheet(require("assets." .. tileset.name))
     local idOffset = tileset.firstgid
+    sheet.idOffset = idOffset
 
     sheets[sheet.name] = sheet
 

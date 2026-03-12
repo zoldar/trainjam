@@ -146,13 +146,30 @@ function _M.load(game, level)
       end
 
       if map.layers.objects[x] and map.layers.objects[x][y] then
-        local tile = map.byId[map.layers.objects[x][y]]
-        local sheet = map.sheets[tile.sheetName].image
         local draw = function()
-          lg.draw(sheet, tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
+          local tile = map.byId[map.layers.objects[x][y]]
+          local sheet = map.sheets[tile.sheetName].image
+
+          lg.draw(sheet, tile.currentSprite or tile.sprite, x * TILE_SIZE, y * TILE_SIZE)
+        end
+        local update = function(dt)
+          local tile = map.byId[map.layers.objects[x][y]]
+
+          if tile.nextFrame then
+            tile.currentFrame = tile.currentFrame or tile.nextFrame
+            tile.currentSprite = tile.currentSprite or tile.sprite
+            tile.currentTime = tile.currentTime and (tile.currentTime - dt) or tile.frameTime
+
+            if tile.currentTime <= 0 then
+              local nextTile = map.byId[map.sheets[tile.sheetName].idOffset + tile.currentFrame]
+              tile.currentSprite = nextTile.sprite
+              tile.currentFrame = nextTile.nextFrame
+              tile.currentTime = nextTile.frameTime
+            end
+          end
         end
 
-        objects[strPosition] = { draw = draw }
+        objects[strPosition] = { draw = draw, update = update }
       end
 
       if map.layers.levers[x] and map.layers.levers[x][y] then
