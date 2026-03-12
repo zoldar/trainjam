@@ -1,6 +1,5 @@
 local push = require("vendor.push.push")
 local assets = require("assets")
-local Bus = require("lib.bus")
 local scenes = require("lib.scenes")
 local keys = require("lib.keys")
 local inspect = require("vendor.inspect")
