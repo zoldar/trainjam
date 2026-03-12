@@ -489,11 +489,13 @@ function game:mousepressed(x, y, button)
   if button == "use" then
     local lx, ly = push:toGame(x, y)
 
-    for _, button in ipairs({ "switch", "resume" }) do
-      if buttonClicked(button, lx, ly) then
-        game.buttons[button] = "pressed"
-      else
-        game.buttons[button] = "normal"
+    if lx and ly then
+      for _, button in ipairs({ "switch", "resume" }) do
+        if buttonClicked(button, lx, ly) then
+          game.buttons[button] = "pressed"
+        else
+          game.buttons[button] = "normal"
+        end
       end
     end
   end
@@ -502,7 +504,7 @@ end
 function game:mousereleased(x, y, button)
   if button == "use" then
     local lx, ly = push:toGame(x, y)
-    if game.started then
+    if game.started and lx and ly then
       if game.levelName == "level0" then
         scenes.switch("game", { args = { FIRST_LEVEL } })
       else

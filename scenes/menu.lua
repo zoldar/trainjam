@@ -69,7 +69,9 @@ end
 function menu:update()
   local mx, my = love.mouse.getX(), love.mouse.getY()
   local lx, ly = push:toGame(mx, my)
-  self.pointer:setPosition(lx, ly)
+  if lx and ly then
+    self.pointer:setPosition(lx, ly)
+  end
 end
 
 function menu:draw()
