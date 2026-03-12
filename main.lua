@@ -33,7 +33,7 @@ love.load = load
 
 local function keypressed(key)
   if keys.toAction(key) then
-    BUS:publish("keypressed_" .. keys.toAction(key))
+    scenes.keypressed(keys.toAction(key))
   end
 end
 
@@ -41,22 +41,24 @@ love.keypressed = keypressed
 
 local function keyreleased(key)
   if keys.toAction(key) then
-    BUS:publish("keyreleased_" .. keys.toAction(key))
+    scenes.keyreleased(keys.toAction(key))
   end
 end
 
 love.keyreleased = keyreleased
 
 local function mousepressed(x, y, button)
-  local buttonName = button == 1 and "primary" or "secondary"
-  BUS:publish("mousepressed_" .. buttonName, { x = x, y = y })
+  if keys.toAction("mouse" .. button) then
+    scenes.mousepressed(x, y, keys.toAction("mouse" .. button))
+  end
 end
 
 love.mousepressed = mousepressed
 
 local function mousereleased(x, y, button)
-  local buttonName = button == 1 and "primary" or "secondary"
-  BUS:publish("mouseclicked_" .. buttonName, { x = x, y = y })
+  if keys.toAction("mouse" .. button) then
+    scenes.mousereleased(x, y, keys.toAction("mouse" .. button))
+  end
 end
 
 love.mousereleased = mousereleased

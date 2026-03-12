@@ -78,7 +78,6 @@ local function updateFocus()
 end
 
 local function updateNextTurn(wagon)
-  local currentNextTurn = wagon.nextTurn
   wagon.nextTurn, wagon.nextTurnDirection, wagon.firstTrail =
     probe(wagon.position, wagon.direction, 1)
   _, _, wagon.secondTrail = probe(wagon.position, wagon.direction, 2)
@@ -455,8 +454,40 @@ function game:init(levelName)
 
   game = level.load(game, levelName)
 
-  game.mouseListener = BUS:subscribe("mousepressed_primary", function(pos)
-    local lx, ly = push:toGame(pos.x, pos.y)
+  scenes.subscribe("game_started", function()
+    game.started = true
+  end)
+
+  game.timer = 0
+  game.realTimer = 0
+  game.started = false
+
+  for _, train in ipairs(game.trains) do
+    updateNextTurn(train)
+  end
+end
+
+function game:keypressed(key)
+  if key == "use" then
+    if game.started and game.levelName == "level0" then
+      scenes.switch("game", { args = { FIRST_LEVEL } })
+    end
+  elseif key == "menu" then
+    if game.levelName ~= "level0" then
+      if scenes.currentFocus() == "menu" then
+        scenes.pop()
+        game.started = true
+      else
+        scenes.push("menu", { args = { game.levelName, game.started } })
+        game.started = false
+      end
+    end
+  end
+end
+
+function game:mousepressed(x, y, button)
+  if button == "use" then
+    local lx, ly = push:toGame(x, y)
 
     for _, button in ipairs({ "switch", "resume" }) do
       if buttonClicked(button, lx, ly) then
@@ -465,16 +496,18 @@ function game:init(levelName)
         game.buttons[button] = "normal"
       end
     end
-  end)
+  end
+end
 
-  game.mouseListener = BUS:subscribe("mouseclicked_primary", function(pos)
-    local lx, ly = push:toGame(pos.x, pos.y)
+function game:mousereleased(x, y, button)
+  if button == "use" then
+    local lx, ly = push:toGame(x, y)
     if game.started then
       if game.levelName == "level0" then
-        scenes.switch("game", FIRST_LEVEL)
+        scenes.switch("game", { args = { FIRST_LEVEL } })
       else
         if optionsClicked(lx, ly) then
-          scenes.push("menu", game.levelName, game.started)
+          scenes.push("menu", { args = { game.levelName, game.started } })
           game.started = false
         elseif game.slow then
           game.buttons.switch = "normal"
@@ -491,36 +524,6 @@ function game:init(levelName)
         end
       end
     end
-  end)
-
-  game.actionListener = BUS:subscribe("keypressed_use", function()
-    if game.started and game.levelName == "level0" then
-      scenes.switch("game", FIRST_LEVEL)
-    end
-  end)
-
-  game.menuListener = BUS:subscribe("keypressed_menu", function()
-    if game.levelName ~= "level0" then
-      if scenes.currentFocus() == "menu" then
-        scenes.pop()
-        game.started = true
-      else
-        scenes.push("menu", game.levelName, game.started)
-        game.started = false
-      end
-    end
-  end)
-
-  self.gameStartedListener = BUS:subscribe("game_started", function()
-    game.started = true
-  end)
-
-  game.timer = 0
-  game.realTimer = 0
-  game.started = false
-
-  for _, train in ipairs(game.trains) do
-    updateNextTurn(train)
   end
 end
 
@@ -566,18 +569,18 @@ function game:update(dt)
   end
 
   if anyTrainDestroyed() then
-    scenes.push("lost", "crashed", game.levelName)
+    scenes.push("lost", { args = { "crashed", game.levelName } })
   end
 
   if game.timeLeft and game.timeLeft <= 0 then
-    scenes.push("lost", "timeout", game.levelName)
+    scenes.push("lost", { args = { "timeout", game.levelName } })
   end
 
   if allTrainsOutOfMap() then
     if allWagonsFull() then
-      scenes.push("won", game.levelName)
+      scenes.push("won", { args = { game.levelName } })
     else
-      scenes.push("lost", "freight_missing", game.levelName)
+      scenes.push("lost", { args = { "freight_missing", game.levelName } })
     end
   end
 end
@@ -646,13 +649,6 @@ function game:draw()
       drawBottomButtons()
     end
   end
-end
-
-function game:close()
-  BUS:unsubscribe(game.mouseListener)
-  BUS:unsubscribe(game.actionListener)
-  BUS:unsubscribe(game.gameStartedListener)
-  BUS:unsubscribe(game.menuListener)
 end
 
 return game

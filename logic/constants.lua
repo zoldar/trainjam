@@ -14,7 +14,7 @@ BUTTONS_BOTTOM_HEIGHT = 25
 
 BINDINGS = {
   menu = { "escape" },
-  use = { "space", "z", "x" },
+  use = { "space", "z", "x", "mouse1" },
   left = { "left", "a" },
   right = { "right", "d" },
   up = { "up", "w" },

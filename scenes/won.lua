@@ -5,13 +5,19 @@ local scenes = require("lib.scenes")
 local won = {}
 
 function won:init(currentLevel)
-  self.actionListener = BUS:subscribeOnce("keypressed_use", function()
-    scenes.switch("game", LEVELS[currentLevel])
-  end)
+  self.nextLevel = LEVELS[currentLevel]
+end
 
-  self.mouseListener = BUS:subscribeOnce("mouseclicked_primary", function()
-    scenes.switch("game", LEVELS[currentLevel])
-  end)
+function won:keypressed(key)
+  if key == "use" then
+    scenes.switch("game", { args = { self.nextLevel } })
+  end
+end
+
+function won:mousereleased(_x, _y, button)
+  if button == "use" then
+    scenes.switch("game", { args = { self.nextLevel } })
+  end
 end
 
 function won:draw()
@@ -29,11 +35,6 @@ function won:draw()
     GAME_WIDTH,
     "center"
   )
-end
-
-function won:close()
-  BUS:unsubscribe(self.mouseListener)
-  BUS:unsubscribe(self.actionListener)
 end
 
 return won

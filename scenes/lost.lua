@@ -5,13 +5,7 @@ local scenes = require("lib.scenes")
 local lost = {}
 
 function lost:init(reason, currentLevel)
-  self.actionListener = BUS:subscribeOnce("keypressed_use", function()
-    scenes.switch("game", currentLevel)
-  end)
-
-  self.mouseListener = BUS:subscribeOnce("mouseclicked_primary", function()
-    scenes.switch("game", currentLevel)
-  end)
+  self.currentLevel = currentLevel
 
   if reason == "crashed" then
     self.message = "YOU CRASHED"
@@ -21,6 +15,18 @@ function lost:init(reason, currentLevel)
     self.message = "YOU DID NOT COLLECT ALL FREIGHT"
   else
     self.message = "YOU LOST"
+  end
+end
+
+function lost:keypressed(key)
+  if key == "use" then
+    scenes.switch("game", { args = { self.currentLevel } })
+  end
+end
+
+function lost:mousereleased(_x, _y, button)
+  if button == "use" then
+    scenes.switch("game", { args = { self.currentLevel } })
   end
 end
 
@@ -39,11 +45,6 @@ function lost:draw()
     GAME_WIDTH,
     "center"
   )
-end
-
-function lost:close()
-  BUS:unsubscribe(self.mouseListener)
-  BUS:unsubscribe(self.actionListener)
 end
 
 return lost

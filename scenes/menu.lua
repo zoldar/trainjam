@@ -8,27 +8,29 @@ local push = require("vendor.push.push")
 
 local menu
 
+local function resume()
+  if menu.gameStarted then
+    scenes.publish("game_started")
+  end
+  scenes:pop()
+end
+
 menu = {
   options = {
     {
       name = "Resume",
-      cb = function()
-        if menu.gameStarted then
-          BUS:publish("game_started")
-        end
-        scenes:pop()
-      end,
+      cb = resume,
     },
     {
       name = "Restart Level",
       cb = function()
-        scenes.switch("game", menu.level)
+        scenes.switch("game", { args = { menu.level } })
       end,
     },
     {
       name = "Start Over",
       cb = function()
-        scenes.switch("game", "level0")
+        scenes.switch("game", { args = { "level0" } })
       end,
     },
     {
@@ -50,10 +52,18 @@ function menu:init(level, gameStarted)
   for _, entry in ipairs(self.options) do
     self.items[#self.items + 1] = Button(self.scene, entry.name, assets.fonts.standard, entry.cb)
   end
+end
 
-  menu.mouseListener = BUS:subscribe("mouseclicked_primary", function()
+function menu:keypressed(key)
+  if key == "menu" then
+    resume()
+  end
+end
+
+function menu:mousereleased(_x, _y, button)
+  if button == "use" then
     self.pointer:raise("release")
-  end)
+  end
 end
 
 function menu:update()
@@ -83,10 +93,6 @@ function menu:draw()
     button:render(position.x, position.y, BUTTON_WIDTH, BUTTON_HEIGHT)
   end
   self.scene:finishFrame()
-end
-
-function menu:close()
-  BUS:unsubscribe(self.mouseListener)
 end
 
 return menu
