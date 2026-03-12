@@ -15,7 +15,7 @@ local function resetFocus(idx)
   focus[idx] = { scene = focus[idx].scene }
 end
 
-function scenes.init(scenesPath, startScene)
+function scenes.init(scenesPath, startScene, opts)
   for _, v in ipairs(love.filesystem.getDirectoryItems(scenesPath)) do
     if string.find(v, ".lua") then
       local modulePath = string.gsub(scenesPath, "/", ".") .. string.gsub(v, ".lua", "")
@@ -24,7 +24,7 @@ function scenes.init(scenesPath, startScene)
   end
 
   if startScene then
-    scenes.push(startScene)
+    scenes.push(startScene, opts)
   end
 end
 
