@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "tileset_cart.tsx",
+    "activeFile": "level5.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -12,7 +12,7 @@
             "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 256,
+                "x": 129,
                 "y": 128
             }
         },
@@ -20,7 +20,7 @@
             "scale": 2.6508,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 256.14908706805494,
+                "x": 160.3289572959107,
                 "y": 127.8859212313264
             }
         },
@@ -28,7 +28,7 @@
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 256,
+                "x": 129,
                 "y": 128
             }
         },
@@ -36,7 +36,7 @@
             "scale": 3,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 256,
+                "x": 171.33333333333334,
                 "y": 128
             }
         },
@@ -44,12 +44,24 @@
             "scale": 4,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 256,
+                "x": 192.5,
                 "y": 128
+            }
+        },
+        "level5.tmx": {
+            "scale": 3,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 176.66666666666663,
+                "y": 73
             }
         },
         "tileset_cart.tsx": {
             "scaleInDock": 2.347,
+            "scaleInEditor": 5.5
+        },
+        "tileset_caves.tsx": {
+            "scaleInDock": 3,
             "scaleInEditor": 5.5
         },
         "tileset_objects.tsx": {
@@ -74,28 +86,22 @@
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
-        "tileset_terrains.tsx",
-        "tileset_rails.tsx",
-        "tileset_objects.tsx",
-        "level0.tmx",
-        "level4.tmx",
-        "tileset_cart.tsx",
-        "level2.tmx",
-        "level1.tmx",
-        "level3.tmx"
+        "level5.tmx"
     ],
     "project": "levels.tiled-project",
     "property.type": "float",
     "recentFiles": [
-        "level3.tmx",
-        "level4.tmx",
+        "level5.tmx",
         "tileset_terrains.tsx",
         "tileset_rails.tsx",
-        "tileset_objects.tsx",
-        "level0.tmx",
+        "tileset_caves.tsx",
+        "level3.tmx",
         "level1.tmx",
         "level2.tmx",
-        "tileset_cart.tsx"
+        "tileset_cart.tsx",
+        "level4.tmx",
+        "level0.tmx",
+        "tileset_objects.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

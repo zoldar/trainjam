@@ -109,8 +109,7 @@ TRAIL_COLORS = {
 }
 
 LEVELS = {
-  level1 = "level2",
-  level2 = "level4",
+  level1 = "level4",
   level4 = "level3",
   level3 = "level0",
 }
